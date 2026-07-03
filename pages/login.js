@@ -9,6 +9,7 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -17,28 +18,28 @@ export default function Login() {
     setLoading(true);
     setError('');
 
-    // Admin backdoor for demo
-    if (email === 'admin@goturkey.com' && password === 'admin123') {
-      router.push('/admin/dashboard');
-      return;
-    }
-
     try {
-      // Find student by email
-      const q = query(collection(db, 'applications'), where('email', '==', email));
+      // Find user by email and password
+      const q = query(collection(db, 'applications'), where('email', '==', email), where('password', '==', password));
       const querySnapshot = await getDocs(q);
       
       if (!querySnapshot.empty) {
-        // Just take the first matching application
         const docRef = querySnapshot.docs[0];
-        localStorage.setItem('student_app_id', docRef.id);
-        router.push('/student/dashboard');
+        const userData = docRef.data();
+        
+        if (userData.role === 'admin') {
+          // Hard navigation to change window context properly
+          window.location.href = '/admin/dashboard';
+        } else {
+          localStorage.setItem('student_app_id', docRef.id);
+          window.location.href = '/student/dashboard';
+        }
       } else {
-        setError('No application found with this email address.');
+        setError('Invalid email or password.');
       }
     } catch (err) {
       console.error(err);
-      setError('An error occurred during login.');
+      setError('An error occurred during login. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -61,9 +62,14 @@ export default function Login() {
                 <label className="form-label">Email Address</label>
                 <input type="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
-              <div className="form-group mb-8">
-                <label className="form-label">Password / ID (Use anything for demo)</label>
-                <input type="password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <div className="form-group mb-8" style={{ position: 'relative' }}>
+                <label className="form-label">Password</label>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input type={showPassword ? "text" : "password"} className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ flex: 1 }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ marginLeft: '-40px', background: 'none', border: 'none', cursor: 'pointer', padding: '10px' }}>
+                    {showPassword ? '👁️' : '🙈'}
+                  </button>
+                </div>
               </div>
               <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', padding: '12px' }}>
                 {loading ? 'Authenticating...' : 'Sign In'}

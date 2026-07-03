@@ -82,7 +82,7 @@ export default function Home() {
               </div>
 
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                 <a href="https://wa.me/905376994302" target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "flex", alignItems: "center", gap: "8px", background: "#25D366" }}>
+                 <a href="https://whatsapp.com/channel/0029VbDH6rm0wajxEpZrUB0b" target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "flex", alignItems: "center", gap: "8px", background: "#25D366" }}>
                     WhatsApp Us
                  </a>
                  <a href="https://www.instagram.com/goturkey2k2x" target="_blank" rel="noreferrer" className="btn-secondary" style={{ display: "flex", alignItems: "center", gap: "8px", color: "white", borderColor: "rgba(255,255,255,0.3)" }}>

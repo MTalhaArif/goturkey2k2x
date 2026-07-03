@@ -26,6 +26,7 @@ export default function StudentDashboard() {
     nationality: '',
     motherName: '',
     phone: '',
+    googleDriveLink: '',
   });
 
   const [files, setFiles] = useState({
@@ -85,9 +86,14 @@ export default function StudentDashboard() {
 
   const uploadFile = async (file, path) => {
     if (!file) return null;
-    const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
-    await uploadBytes(storageRef, file);
-    return await getDownloadURL(storageRef);
+    try {
+      const storageRef = ref(storage, `${path}/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      console.warn(`Failed to upload ${file.name}:`, error);
+      return null; // Graceful fallback
+    }
   };
 
   const handleCompleteApplication = async (e) => {
@@ -223,41 +229,48 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Mandatory Documents</h3>
+                <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Upload Documents</h3>
+                <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>If file uploads fail due to server issues, please paste a Google Drive folder link containing all your documents below.</p>
+                
+                <div className="form-group mb-8">
+                  <label className="form-label">Google Drive Folder Link (Alternative)</label>
+                  <input type="url" className="form-input" name="googleDriveLink" value={formData.googleDriveLink} onChange={handleInputChange} placeholder="https://drive.google.com/..." />
+                </div>
+
                 <div className="grid-3" style={{ gridTemplateColumns: '1fr', gap: '1rem' }}>
                   <div className="form-group">
-                    <label className="form-label">High School Certificate *</label>
-                    <input type="file" className="form-input" name="highschoolCert" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required />
+                    <label className="form-label">High School Certificate</label>
+                    <input type="file" className="form-input" name="highschoolCert" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">High School Marks / Transcript *</label>
-                    <input type="file" className="form-input" name="highschoolMarks" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required />
+                    <label className="form-label">High School Marks / Transcript</label>
+                    <input type="file" className="form-input" name="highschoolMarks" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
                   </div>
                   
                   {isPostgrad && (
                     <>
                       <div className="form-group">
-                        <label className="form-label">Bachelor's Degree * (For Postgraduate)</label>
-                        <input type="file" className="form-input" name="bsDegree" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required={isPostgrad} />
+                        <label className="form-label">Bachelor's Degree (For Postgraduate)</label>
+                        <input type="file" className="form-input" name="bsDegree" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
                       </div>
                       <div className="form-group">
-                        <label className="form-label">Bachelor's Transcript * (For Postgraduate)</label>
-                        <input type="file" className="form-input" name="bsTranscript" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required={isPostgrad} />
+                        <label className="form-label">Bachelor's Transcript (For Postgraduate)</label>
+                        <input type="file" className="form-input" name="bsTranscript" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
                       </div>
                     </>
                   )}
 
                   <div className="form-group">
-                    <label className="form-label">Passport *</label>
-                    <input type="file" className="form-input" name="passport" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" required />
+                    <label className="form-label">Passport</label>
+                    <input type="file" className="form-input" name="passport" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png" />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">White Background Picture *</label>
-                    <input type="file" className="form-input" name="photo" onChange={handleFileChange} accept=".jpg,.jpeg,.png" required />
+                    <label className="form-label">White Background Picture</label>
+                    <input type="file" className="form-input" name="photo" onChange={handleFileChange} accept=".jpg,.jpeg,.png" />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">CV / Resume *</label>
-                    <input type="file" className="form-input" name="cv" onChange={handleFileChange} accept=".pdf,.doc,.docx" required />
+                    <label className="form-label">CV / Resume</label>
+                    <input type="file" className="form-input" name="cv" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
                   </div>
                 </div>
 

@@ -9,6 +9,7 @@ export default function Register() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   
   // Pre-filled with dummy details as requested
   const [formData, setFormData] = useState({
@@ -52,7 +53,8 @@ export default function Register() {
       // Save ID to localStorage
       localStorage.setItem('student_app_id', docRef.id);
       
-      router.push('/student/dashboard');
+      // Hard navigation
+      window.location.href = '/student/dashboard';
     } catch (err) {
       console.error('Error creating account:', err);
       setError('There was an error creating your account. Please try again.');
@@ -89,9 +91,14 @@ export default function Register() {
                 <label className="form-label">Email Address</label>
                 <input type="email" className="form-input" name="email" value={formData.email} onChange={handleInputChange} required />
               </div>
-              <div className="form-group mb-8">
+              <div className="form-group mb-8" style={{ position: 'relative' }}>
                 <label className="form-label">Password</label>
-                <input type="password" className="form-input" name="password" value={formData.password} onChange={handleInputChange} required />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <input type={showPassword ? "text" : "password"} className="form-input" name="password" value={formData.password} onChange={handleInputChange} required style={{ flex: 1 }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ marginLeft: '-40px', background: 'none', border: 'none', cursor: 'pointer', padding: '10px' }}>
+                    {showPassword ? '👁️' : '🙈'}
+                  </button>
+                </div>
               </div>
 
               <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', fontSize: '1.1rem', padding: '14px' }}>
