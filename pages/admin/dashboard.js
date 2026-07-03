@@ -1,3 +1,4 @@
+// Trigger Vercel Rebuild
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { db, storage } from '@/lib/firebase';
