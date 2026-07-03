@@ -77,11 +77,10 @@ export default function AdminDashboard() {
       <Head>
         <title>Admin Dashboard | GoTurkey 2k2x</title>
       </Head>
-      <div style={{ padding: '2rem', background: '#f8fafc', minHeight: '100vh' }}>
-        <div className="container" style={{ maxWidth: '1400px' }}>
+      <div style={{ padding: '0', minHeight: '100vh' }}>
+        <div className="container" style={{ maxWidth: '1400px', padding: '0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ color: 'var(--secondary)' }}>Admin Dashboard - Applications</h1>
-            <button onClick={() => router.push('/')} className="btn-secondary">Back to Site</button>
+            <h1 style={{ color: 'var(--secondary)' }}>Applications</h1>
           </div>
 
           {loading ? (

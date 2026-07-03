@@ -1,0 +1,41 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+export default function DashboardLayout({ children }) {
+  const router = useRouter();
+  
+  // Decide if admin or student based on path
+  const isAdmin = router.pathname.startsWith('/admin');
+
+  const handleLogout = () => {
+    if (isAdmin) {
+      router.push('/');
+    } else {
+      localStorage.removeItem('student_app_id');
+      router.push('/');
+    }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column' }}>
+      <header style={{ background: 'var(--secondary)', color: 'white', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Link href="/" style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>
+            <span style={{ color: 'var(--primary)' }}>GoTurkey</span>2k2x
+          </Link>
+          <span style={{ color: 'rgba(255,255,255,0.4)' }}>|</span>
+          <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{isAdmin ? 'Admin Portal' : 'Student Portal'}</span>
+        </div>
+        <div>
+          <button onClick={handleLogout} style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
+            Logout
+          </button>
+        </div>
+      </header>
+      
+      <main style={{ flex: 1, padding: '2rem' }}>
+        {children}
+      </main>
+    </div>
+  );
+}

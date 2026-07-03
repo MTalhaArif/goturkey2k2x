@@ -167,15 +167,8 @@ export default function StudentDashboard() {
       <Head>
         <title>Student Dashboard | GoTurkey 2k2x</title>
       </Head>
-      
-      <div className="top-bar">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div>Student Portal - {appData.firstName} {appData.lastName}</div>
-          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}>Logout</button>
-        </div>
-      </div>
 
-      <div className="section section-bg" style={{ minHeight: '80vh' }}>
+      <div className="section section-bg" style={{ minHeight: '80vh', borderRadius: '12px' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
