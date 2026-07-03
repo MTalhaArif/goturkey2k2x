@@ -14,8 +14,6 @@ export default function Header() {
             </a>
           </div>
           <div className="top-social">
-            <Link href="/admin/login" className="top-auth-link" style={{ color: "var(--accent)", fontWeight: 700 }}>Admin Portal</Link>
-            <div className="top-divider"></div>
             <Link href="/register" className="top-auth-link">Register</Link>
             <Link href="/login" className="top-auth-link">Login</Link>
           </div>
