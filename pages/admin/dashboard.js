@@ -70,6 +70,7 @@ export default function AdminDashboard() {
     if (status === 'Accepted') return '#10b981';
     if (status === 'Offer Sent') return '#3b82f6';
     if (status === 'Payment Received') return '#8b5cf6';
+    if (status === 'Incomplete') return '#ef4444'; // Red/Warning for Incomplete
     return '#b8860b'; // Pending
   };
 
@@ -164,6 +165,7 @@ export default function AdminDashboard() {
                                   <div className="form-group">
                                     <label className="form-label">Update Status</label>
                                     <select className="form-select" value={statusAction} onChange={(e) => setStatusAction(e.target.value)}>
+                                      <option value="Incomplete">Incomplete</option>
                                       <option value="Pending">Pending</option>
                                       <option value="Offer Sent">Offer Sent</option>
                                       <option value="Payment Received">Payment Received</option>

@@ -120,7 +120,7 @@ export default function StudentDashboard() {
       const appRef = doc(db, 'applications', appData.id);
       const updates = {
         ...formData,
-        documents: docs,
+        documents: { ...(appData.documents || {}), ...docs }, // Merge existing docs
         status: 'Pending'
       };
 
@@ -130,6 +130,41 @@ export default function StudentDashboard() {
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('There was an error submitting your application. Please try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSaveDraft = async (e) => {
+    e.preventDefault();
+    setUploading(true);
+    
+    try {
+      const docs = {};
+      if (files.highschoolCert) docs.highschoolCert = await uploadFile(files.highschoolCert, 'documents/hs_certs');
+      if (files.highschoolMarks) docs.highschoolMarks = await uploadFile(files.highschoolMarks, 'documents/hs_marks');
+      if (files.passport) docs.passport = await uploadFile(files.passport, 'documents/passports');
+      if (files.photo) docs.photo = await uploadFile(files.photo, 'documents/photos');
+      if (files.cv) docs.cv = await uploadFile(files.cv, 'documents/cvs');
+      if (files.bsTranscript) docs.bsTranscript = await uploadFile(files.bsTranscript, 'documents/bs_transcripts');
+      if (files.bsDegree) docs.bsDegree = await uploadFile(files.bsDegree, 'documents/bs_degrees');
+      if (files.englishCert) docs.englishCert = await uploadFile(files.englishCert, 'documents/english_certs');
+      if (files.recommendationLetter) docs.recommendationLetter = await uploadFile(files.recommendationLetter, 'documents/rec_letters');
+
+      const appRef = doc(db, 'applications', appData.id);
+      const updates = {
+        ...formData,
+        documents: { ...(appData.documents || {}), ...docs },
+        status: 'Incomplete' // Kept as incomplete
+      };
+
+      await updateDoc(appRef, updates);
+      setAppData(prev => ({ ...prev, ...updates }));
+      alert('Draft saved successfully! You can return later to complete it.');
+      window.scrollTo(0, 0);
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      alert('There was an error saving your draft. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -286,9 +321,12 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <div className="mt-4 text-center">
-                  <button type="submit" className="btn-primary" disabled={uploading} style={{ width: '100%', fontSize: '1.2rem', padding: '14px' }}>
-                    {uploading ? 'Uploading Documents & Submitting...' : 'Submit Application'}
+                <div className="mt-4 text-center" style={{ display: 'flex', gap: '1rem' }}>
+                  <button type="button" onClick={handleSaveDraft} className="btn-secondary" disabled={uploading} style={{ flex: 1, fontSize: '1.1rem', padding: '14px', background: 'transparent', border: '2px solid var(--primary)', color: 'var(--primary)' }}>
+                    {uploading ? 'Saving...' : 'Save as Draft'}
+                  </button>
+                  <button type="submit" className="btn-primary" disabled={uploading} style={{ flex: 2, fontSize: '1.2rem', padding: '14px' }}>
+                    {uploading ? 'Uploading Documents & Submitting...' : 'Submit Final Application'}
                   </button>
                 </div>
               </form>
