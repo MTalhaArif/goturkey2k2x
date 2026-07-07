@@ -16,7 +16,8 @@ export default function Register() {
     firstName: 'John',
     lastName: 'Doe',
     email: 'johndoe@example.com',
-    password: 'password123'
+    password: 'password123',
+    reference: ''
   });
 
   const handleInputChange = (e) => {
@@ -44,6 +45,8 @@ export default function Register() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
+        password: formData.password,
+        reference: formData.reference,
         status: 'Incomplete', // Tells dashboard to show the full mandatory form
         createdAt: new Date().toISOString(),
       };
@@ -91,7 +94,7 @@ export default function Register() {
                 <label className="form-label">Email Address</label>
                 <input type="email" className="form-input" name="email" value={formData.email} onChange={handleInputChange} required />
               </div>
-              <div className="form-group mb-8" style={{ position: 'relative' }}>
+              <div className="form-group" style={{ position: 'relative' }}>
                 <label className="form-label">Password</label>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <input type={showPassword ? "text" : "password"} className="form-input" name="password" value={formData.password} onChange={handleInputChange} required style={{ flex: 1 }} />
@@ -99,6 +102,11 @@ export default function Register() {
                     {showPassword ? '👁️' : '🙈'}
                   </button>
                 </div>
+              </div>
+
+              <div className="form-group mb-8">
+                <label className="form-label">Write down your reference</label>
+                <input type="text" className="form-input" name="reference" value={formData.reference} onChange={handleInputChange} placeholder="Agent name, friend, or how you heard about us (optional)" />
               </div>
 
               <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', fontSize: '1.1rem', padding: '14px' }}>

@@ -36,7 +36,7 @@ export default function Footer() {
             <h3>Follow Us</h3>
             <ul className="footer-links">
               <li><a href="https://www.instagram.com/goturkey2k2x" target="_blank" rel="noreferrer">› Instagram</a></li>
-              <li><a href="#" target="_blank" rel="noreferrer">› WhatsApp Channel</a></li>
+              <li><a href="https://whatsapp.com/channel/0029VbDH6rm0wajxEpZrUB0b" target="_blank" rel="noreferrer">› WhatsApp Channel</a></li>
             </ul>
           </div>
         </div>

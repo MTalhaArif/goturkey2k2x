@@ -148,7 +148,8 @@ export default function AdminDashboard() {
                                 {/* Left Side: Documents & Info */}
                                 <div style={{ flex: 1 }}>
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Application Details</h4>
-                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Passport:</strong> {app.passportNo} | <strong>DOB:</strong> {app.dob}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Passport:</strong> {app.passportNo || 'N/A'} | <strong>DOB:</strong> {app.dob || 'N/A'}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Reference:</strong> {app.reference || 'N/A'}</p>
                                   
                                   <h5 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Student Documents:</h5>
                                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
