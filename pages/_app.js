@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "leaflet/dist/leaflet.css";
 import Layout from "@/components/Layout";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useRouter } from "next/router";

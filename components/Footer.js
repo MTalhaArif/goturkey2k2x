@@ -28,6 +28,7 @@ export default function Footer() {
               <li><Link href="/about">› About Us</Link></li>
               <li><Link href="/universities">› Partner Universities</Link></li>
               <li><Link href="/services">› Our Services</Link></li>
+              <li><Link href="/tourism">› Tourism</Link></li>
               <li><Link href="/register">› Apply Now</Link></li>
             </ul>
           </div>

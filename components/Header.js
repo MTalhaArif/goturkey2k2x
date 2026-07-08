@@ -40,6 +40,9 @@ export default function Header() {
             <div className="nav-item">
               <Link href="/services" className="nav-link-btn">Our Services</Link>
             </div>
+            <div className="nav-item">
+              <Link href="/tourism" className="nav-link-btn">Tourism</Link>
+            </div>
             <Link href="/register" className="nav-link-btn nav-tryos">Apply Now</Link>
           </nav>
         </div>

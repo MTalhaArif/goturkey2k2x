@@ -27,6 +27,9 @@ export default function StudentDashboard() {
     motherName: '',
     phone: '',
     googleDriveLink: '',
+    documentationServices: [],
+    documentationOther: '',
+    accommodationTypes: [],
   });
 
   const [files, setFiles] = useState({
@@ -78,6 +81,14 @@ export default function StudentDashboard() {
   // -----------------------------------------------------
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCheckboxToggle = (field, value) => {
+    setFormData((prev) => {
+      const current = prev[field] || [];
+      const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+      return { ...prev, [field]: next };
+    });
   };
 
   const handleFileChange = (e) => {
@@ -319,6 +330,55 @@ export default function StudentDashboard() {
                     <label className="form-label">Recommendation Letter (Optional)</label>
                     <input type="file" className="form-input" name="recommendationLetter" onChange={handleFileChange} accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
                   </div>
+                </div>
+
+                <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Documentation Services (Optional)</h3>
+                <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Do you need assistance with any of the following documentation services? (Select all that apply.)</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem' }}>
+                  {['Residence Permit (İkamet)', 'Notarized Rental Contract', 'Health Insurance', 'Tax Number', 'Address Registration', 'Nüfus Registration'].map((option) => (
+                    <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.documentationServices.includes(option)}
+                        onChange={() => handleCheckboxToggle('documentationServices', option)}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.documentationServices.includes('Other')}
+                      onChange={() => handleCheckboxToggle('documentationServices', 'Other')}
+                    />
+                    Other:
+                  </label>
+                  {formData.documentationServices.includes('Other') && (
+                    <input
+                      type="text"
+                      className="form-input"
+                      name="documentationOther"
+                      value={formData.documentationOther}
+                      onChange={handleInputChange}
+                      placeholder="Please specify"
+                      style={{ maxWidth: '400px' }}
+                    />
+                  )}
+                </div>
+
+                <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Accommodation Services (Optional)</h3>
+                <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>What type of accommodation are you looking for?</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem' }}>
+                  {['Shared Room', 'Private Room', 'Studio Apartment', 'Apartment'].map((option) => (
+                    <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.accommodationTypes.includes(option)}
+                        onChange={() => handleCheckboxToggle('accommodationTypes', option)}
+                      />
+                      {option}
+                    </label>
+                  ))}
                 </div>
 
                 <div className="mt-4 text-center" style={{ display: 'flex', gap: '1rem' }}>

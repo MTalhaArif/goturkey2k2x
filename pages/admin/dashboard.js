@@ -150,7 +150,13 @@ export default function AdminDashboard() {
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Application Details</h4>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Passport:</strong> {app.passportNo || 'N/A'} | <strong>DOB:</strong> {app.dob || 'N/A'}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Reference:</strong> {app.reference || 'N/A'}</p>
-                                  
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                                    <strong>Documentation Services:</strong> {(app.documentationServices || []).map((s) => (s === 'Other' ? (app.documentationOther || 'Other') : s)).join(', ') || 'None requested'}
+                                  </p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                                    <strong>Accommodation:</strong> {(app.accommodationTypes || []).join(', ') || 'None requested'}
+                                  </p>
+
                                   <h5 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Student Documents:</h5>
                                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                                     {Object.entries(app.documents || {}).map(([key, url]) => (

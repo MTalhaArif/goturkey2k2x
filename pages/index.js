@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import StudyFinder from "@/components/StudyFinder";
 
 export default function Home() {
   const students = [
@@ -28,6 +29,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <StudyFinder />
 
       {/* WHY TÜRKIYE / WHY US SECTION */}
       <section className="section section-bg">
