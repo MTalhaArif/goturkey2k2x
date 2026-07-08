@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <>
       <div className="top-bar">
@@ -30,20 +34,26 @@ export default function Header() {
             </div>
           </Link>
 
-          <nav className="nav-links">
+          <button className="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <nav className={`nav-links${menuOpen ? ' nav-links-open' : ''}`}>
             <div className="nav-item">
-              <Link href="/about" className="nav-link-btn">About Us</Link>
+              <Link href="/about" className="nav-link-btn" onClick={closeMenu}>About Us</Link>
             </div>
             <div className="nav-item">
-              <Link href="/universities" className="nav-link-btn">Universities</Link>
+              <Link href="/universities" className="nav-link-btn" onClick={closeMenu}>Universities</Link>
             </div>
             <div className="nav-item">
-              <Link href="/services" className="nav-link-btn">Our Services</Link>
+              <Link href="/services" className="nav-link-btn" onClick={closeMenu}>Our Services</Link>
             </div>
             <div className="nav-item">
-              <Link href="/tourism" className="nav-link-btn">Tourism</Link>
+              <Link href="/tourism" className="nav-link-btn" onClick={closeMenu}>Tourism</Link>
             </div>
-            <Link href="/register" className="nav-link-btn nav-tryos">Apply Now</Link>
+            <Link href="/register" className="nav-link-btn nav-tryos" onClick={closeMenu}>Apply Now</Link>
           </nav>
         </div>
       </header>

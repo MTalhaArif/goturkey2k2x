@@ -80,7 +80,7 @@ export default function Register() {
             {error && <div style={{ background: '#fee2e2', color: '#b91c1c', padding: '10px', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
             
             <form onSubmit={handleSubmit}>
-              <div className="grid-3" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="responsive-2col" style={{ gap: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">First Name</label>
                   <input type="text" className="form-input" name="firstName" value={formData.firstName} onChange={handleInputChange} required />

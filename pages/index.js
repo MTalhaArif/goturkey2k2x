@@ -22,7 +22,7 @@ export default function Home() {
           <div className="hero-content" style={{ margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", color: "white" }}>
             <h1 style={{ color: "white" }}>September 2026 Intake is Open!</h1>
             <p style={{ fontWeight: 500, color: "white" }}>High-Quality Higher Education Opportunities in Worldwide Known Universities</p>
-            <div style={{ display: "flex", gap: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
               <Link href="/register" className="btn-primary" style={{ backgroundColor: "var(--accent)", color: "var(--text-main)" }}>Apply Now</Link>
               <Link href="/universities" className="btn-secondary" style={{ color: "white", borderColor: "white" }}>Explore Universities</Link>
             </div>
@@ -67,13 +67,13 @@ export default function Home() {
       {/* TURKISH LANGUAGE COURSE SECTION */}
       <section className="section" style={{ background: "linear-gradient(to right, #0F1A3C, #1a2a5c)", color: "white" }}>
         <div className="container">
-          <div className="grid-3" style={{ gridTemplateColumns: "1fr 1fr", gap: "4rem", alignItems: "center" }}>
+          <div className="responsive-2col" style={{ gap: "4rem", alignItems: "center" }}>
             <div>
               <div style={{ background: "var(--primary)", display: "inline-block", padding: "6px 12px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "1rem", letterSpacing: "1px" }}>BATCH 1 - 2026 • STARTING SOON</div>
               <h2 style={{ fontSize: "3rem", marginBottom: "1rem", lineHeight: "1.1" }}>1 Month of<br/><span style={{ color: "var(--accent)" }}>Turkish Learning</span></h2>
               <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "rgba(255,255,255,0.8)" }}>Are you coming to Türkiye on a Study Visa or for a Visit? Your journey starts with a word! Learn the language to feel like a local on your first day.</p>
               
-              <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "2rem", background: "rgba(255,255,255,0.1)", padding: "1rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem", marginBottom: "2rem", background: "rgba(255,255,255,0.1)", padding: "1rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)" }}>
                 <div>
                   <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", display: "block" }}>100 USD</span>
                   <span style={{ fontSize: "2.5rem", fontWeight: "bold", color: "var(--accent)", lineHeight: "1" }}>35 USD</span>
@@ -94,7 +94,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div className="responsive-2col" style={{ gap: "1rem" }}>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
                 <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>📹 Online Classes on Zoom</h4>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Learn from anywhere, anytime with interactive sessions.</p>

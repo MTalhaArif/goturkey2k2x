@@ -28,7 +28,7 @@ export default function About() {
             <h2 style={{ fontSize: "2rem" }}>Our Leadership Team</h2>
           </div>
 
-          <div className="grid-3" style={{ gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+          <div className="responsive-2col" style={{ gap: "3rem" }}>
             {/* CEO Profile */}
             <div className="card text-center" style={{ borderTop: "4px solid var(--primary)" }}>
               <div style={{ width: "150px", height: "150px", borderRadius: "50%", background: "var(--secondary)", color: "white", margin: "0 auto 1.5rem auto", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "3rem", fontWeight: "bold" }}>

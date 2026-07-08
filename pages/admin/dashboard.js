@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                         {expandedRow === app.id && (
                           <tr style={{ background: 'rgba(15, 26, 60, 0.02)' }}>
                             <td colSpan="5" style={{ padding: '1.5rem', borderBottom: '2px solid var(--border)' }}>
-                              <div style={{ display: 'flex', gap: '2rem' }}>
+                              <div className="admin-action-row" style={{ display: 'flex', gap: '2rem' }}>
                                 {/* Left Side: Documents & Info */}
                                 <div style={{ flex: 1 }}>
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Application Details</h4>

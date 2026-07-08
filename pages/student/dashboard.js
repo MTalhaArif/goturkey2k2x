@@ -251,7 +251,7 @@ export default function StudentDashboard() {
                 </div>
 
                 <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Personal Information</h3>
-                <div className="grid-3" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="responsive-2col" style={{ gap: '1rem' }}>
                   <div className="form-group">
                     <label className="form-label">Date of Birth *</label>
                     <input type="date" className="form-input" name="dob" value={formData.dob} onChange={handleInputChange} required />
@@ -381,7 +381,7 @@ export default function StudentDashboard() {
                   ))}
                 </div>
 
-                <div className="mt-4 text-center" style={{ display: 'flex', gap: '1rem' }}>
+                <div className="mt-4 text-center form-btn-row" style={{ display: 'flex', gap: '1rem' }}>
                   <button type="button" onClick={handleSaveDraft} className="btn-secondary" disabled={uploading} style={{ flex: 1, fontSize: '1.1rem', padding: '14px', background: 'transparent', border: '2px solid var(--primary)', color: 'var(--primary)' }}>
                     {uploading ? 'Saving...' : 'Save as Draft'}
                   </button>

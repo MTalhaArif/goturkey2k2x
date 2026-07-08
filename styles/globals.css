@@ -116,3 +116,38 @@ button { font-family: var(--font-body); }
 .mt-4 { margin-top: 1rem; }
 .mb-4 { margin-bottom: 1rem; }
 .mb-8 { margin-bottom: 2rem; }
+
+/* ─── RESPONSIVE 2-COLUMN (form rows, split sections) ── */
+.responsive-2col { display: grid; grid-template-columns: 1fr 1fr; }
+
+/* ─── MOBILE NAV ───────────────────────────── */
+.mobile-menu-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 34px; height: 34px; background: none; border: none; cursor: pointer; padding: 0; flex-shrink: 0; }
+.mobile-menu-toggle span { display: block; width: 100%; height: 2px; background: var(--secondary); border-radius: 2px; }
+
+/* ─── RESPONSIVE BREAKPOINTS ───────────────── */
+@media (max-width: 860px) {
+  .header .container { position: relative; }
+  .mobile-menu-toggle { display: flex; }
+  .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; align-items: stretch; gap: 4px; padding: 12px; box-shadow: 0 16px 30px rgba(0,0,0,0.12); border-radius: 0 0 12px 12px; }
+  .nav-links.nav-links-open { display: flex; }
+  .nav-item { padding-bottom: 0; margin-bottom: 0; }
+  .nav-link-btn { width: 100%; text-align: left; }
+}
+
+@media (max-width: 768px) {
+  .section { padding: 60px 0; }
+  .section-header { margin-bottom: 36px; }
+  .section-header h2 { font-size: 26px; }
+  .hero-slides-wrap { height: auto; min-height: 460px; padding: 70px 0; }
+  .hero-content h1 { font-size: 32px; letter-spacing: -0.5px; }
+  .hero-content p { font-size: 16px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+  .responsive-2col { grid-template-columns: 1fr; }
+  .admin-action-row { flex-direction: column; gap: 1.5rem !important; }
+  .form-btn-row { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .logo-tagline { display: none; }
+  .top-contact { gap: 12px; font-size: 12px; }
+}
