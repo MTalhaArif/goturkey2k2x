@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/AuthContext';
 import ProfileCompletionGate from '@/components/student/ProfileCompletionGate';
@@ -29,11 +29,17 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, 'applications'), where('studentUid', '==', user.uid), orderBy('createdAt', 'desc'));
+    // Sorted client-side rather than via Firestore orderBy: combining an
+    // equality filter (studentUid) with orderBy on a different field
+    // (createdAt) requires a composite index that doesn't exist for this
+    // collection, which made this query fail silently on every load.
+    const q = query(collection(db, 'applications'), where('studentUid', '==', user.uid));
     const unsubscribe = onSnapshot(
       q,
       (snap) => {
-        setApplications(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        const apps = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        apps.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+        setApplications(apps);
         setApplicationsLoading(false);
       },
       (err) => {
@@ -84,6 +90,8 @@ export default function StudentDashboard() {
               application={selectedApplication}
               onBack={() => setView('list')}
             />
+          ) : view === 'detail' ? (
+            <div style={{ textAlign: 'center', padding: '4rem' }}>Loading application...</div>
           ) : (
             <ApplicationsList
               applications={applications}
