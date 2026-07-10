@@ -50,9 +50,12 @@ export default function ApplicationDetail({ application, onBack }) {
     setUploading(true);
     try {
       const uploadedDocs = {};
+      const failedLabels = [];
       for (const slot of [...requiredSlots, ...OPTIONAL_SLOTS]) {
         if (files[slot.key]) {
-          uploadedDocs[slot.key] = await uploadFile(files[slot.key], slot.path);
+          const url = await uploadFile(files[slot.key], slot.path);
+          uploadedDocs[slot.key] = url;
+          if (!url) failedLabels.push(slot.label);
         }
       }
 
@@ -66,9 +69,11 @@ export default function ApplicationDetail({ application, onBack }) {
 
       await updateDoc(appRef, updates);
       setFiles({});
+      return { failedLabels };
     } catch (error) {
       console.error('Error saving documents:', error);
       alert('There was an error saving your documents. Please try again.');
+      return { failedLabels: [], hadError: true };
     } finally {
       setUploading(false);
     }
@@ -76,12 +81,25 @@ export default function ApplicationDetail({ application, onBack }) {
 
   const handleSaveDraft = (e) => {
     e.preventDefault();
-    saveDocuments(null).then(() => alert('Draft saved successfully! You can return later to complete it.'));
+    saveDocuments(null).then((result) => {
+      if (!result || result.hadError) return;
+      if (result.failedLabels.length > 0) {
+        alert(`Draft saved, but these files could not be uploaded: ${result.failedLabels.join(', ')}. Please paste a Google Drive link above as a fallback, or try again shortly.`);
+      } else {
+        alert('Draft saved successfully! You can return later to complete it.');
+      }
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveDocuments('submitted').then(() => window.scrollTo(0, 0));
+    saveDocuments('submitted').then((result) => {
+      window.scrollTo(0, 0);
+      if (!result || result.hadError) return;
+      if (result.failedLabels.length > 0) {
+        alert(`Application submitted, but these files could not be uploaded: ${result.failedLabels.join(', ')}. Please paste a Google Drive link above as a fallback, or try again shortly.`);
+      }
+    });
   };
 
   const handleUploadSlip = async (e) => {
@@ -90,6 +108,10 @@ export default function ApplicationDetail({ application, onBack }) {
     setUploading(true);
     try {
       const url = await uploadFile(slipFile, 'documents/payments');
+      if (!url) {
+        alert('The payment proof file could not be uploaded. Please try again shortly, or contact us directly with the receipt.');
+        return;
+      }
       const appRef = doc(db, 'applications', application.id);
       const updates = { paymentSlipUrl: url, stage: 'payment_pending', updatedAt: new Date().toISOString() };
       await updateDoc(appRef, updates);

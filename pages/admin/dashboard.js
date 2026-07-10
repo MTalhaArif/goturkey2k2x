@@ -62,12 +62,23 @@ export default function AdminDashboard() {
       const appRef = doc(db, 'applications', appId);
       const updates = { stage: stageAction, adminNotes, updatedAt: new Date().toISOString() };
 
+      let offerUploadFailed = false;
       if (offerFile) {
-        updates.offerLetterUrl = await uploadFile(offerFile, 'documents/offers');
+        const url = await uploadFile(offerFile, 'documents/offers');
+        if (url) {
+          updates.offerLetterUrl = url;
+        } else {
+          offerUploadFailed = true;
+        }
       }
 
       await updateDoc(appRef, updates);
-      alert('Application updated successfully!');
+
+      if (offerUploadFailed) {
+        alert('Status and notes were saved, but the offer letter file could not be uploaded. The student will NOT see an offer letter yet — please try attaching it again.');
+      } else {
+        alert('Application updated successfully!');
+      }
 
       setOfferFile(null);
       setAdminNotes('');
