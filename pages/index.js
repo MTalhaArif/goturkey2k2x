@@ -1,25 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { useSyncExternalStore } from "react";
 import StudyFinder from "@/components/StudyFinder";
 import Reveal from "@/components/Reveal";
-
-const TurkeyGlobe = dynamic(() => import("@/components/TurkeyGlobe"), { ssr: false });
-
-const DESKTOP_QUERY = '(min-width: 861px)';
-
-function subscribeToDesktopQuery(callback) {
-  const mq = window.matchMedia(DESKTOP_QUERY);
-  mq.addEventListener('change', callback);
-  return () => mq.removeEventListener('change', callback);
-}
-function getIsDesktop() {
-  return window.matchMedia(DESKTOP_QUERY).matches;
-}
-function getIsDesktopServer() {
-  return false;
-}
 
 export default function Home() {
   const students = [
@@ -27,8 +9,6 @@ export default function Home() {
     { name: "Meriem Amrane", faculty: "Faculty of Engineering", country: "ALGERIA", quote: "The quality of education here is outstanding. My professors are highly knowledgeable and the facilities are modern." },
     { name: "Soo Yeon Park", faculty: "Faculty of Languages History and Geography", country: "KOREA", quote: "Türkiye is a perfect blend of East and West. As a language student, immersing myself in Turkish culture while studying has been invaluable." }
   ];
-
-  const showGlobe = useSyncExternalStore(subscribeToDesktopQuery, getIsDesktop, getIsDesktopServer);
 
   return (
     <>
@@ -40,11 +20,6 @@ export default function Home() {
       {/* HERO SECTION */}
       <section className="hero">
         <div className="hero-slides-wrap" style={{ background: "linear-gradient(135deg, rgba(15, 26, 60, 0.8) 0%, rgba(227, 28, 37, 0.6) 100%), url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
-          {showGlobe && (
-            <div className="hero-globe-layer">
-              <TurkeyGlobe />
-            </div>
-          )}
           <div className="hero-content" style={{ margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", color: "white" }}>
             <h1 style={{ color: "white" }}>September 2026 Intake is Open!</h1>
             <p style={{ fontWeight: 500, color: "white" }}>High-Quality Higher Education Opportunities in Worldwide Known Universities</p>

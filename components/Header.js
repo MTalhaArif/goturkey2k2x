@@ -1,9 +1,23 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const router = useRouter();
+  const { user, profile, loading } = useAuth();
+
+  const dashboardHref = profile?.role === 'admin' ? '/admin/dashboard' : '/student/dashboard';
+
+  const handleLogout = async () => {
+    closeMenu();
+    await signOut(auth);
+    router.push('/');
+  };
 
   return (
     <>
@@ -18,8 +32,18 @@ export default function Header() {
             </a>
           </div>
           <div className="top-social">
-            <Link href="/register" className="top-auth-link">Register</Link>
-            <Link href="/login" className="top-auth-link">Login</Link>
+            {loading ? null : user ? (
+              <>
+                <span className="top-auth-link" style={{ opacity: 0.9 }}>Hi, {profile?.firstName || 'there'}</span>
+                <Link href={dashboardHref} className="top-auth-link">Dashboard</Link>
+                <button onClick={handleLogout} className="top-auth-link" style={{ background: 'none', border: 'none', cursor: 'pointer', font: 'inherit' }}>Logout</button>
+              </>
+            ) : (
+              <>
+                <Link href="/register" className="top-auth-link">Register</Link>
+                <Link href="/login" className="top-auth-link">Login</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -53,7 +77,11 @@ export default function Header() {
             <div className="nav-item">
               <Link href="/tourism" className="nav-link-btn" onClick={closeMenu}>Tourism</Link>
             </div>
-            <Link href="/register" className="nav-link-btn nav-tryos" onClick={closeMenu}>Apply Now</Link>
+            {user ? (
+              <Link href={dashboardHref} className="nav-link-btn nav-tryos" onClick={closeMenu}>Dashboard</Link>
+            ) : (
+              <Link href="/register" className="nav-link-btn nav-tryos" onClick={closeMenu}>Apply Now</Link>
+            )}
           </nav>
         </div>
       </header>
