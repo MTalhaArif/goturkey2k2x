@@ -1,19 +1,17 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  
+
   // Decide if admin or student based on path
   const isAdmin = router.pathname.startsWith('/admin');
 
-  const handleLogout = () => {
-    if (isAdmin) {
-      router.push('/');
-    } else {
-      localStorage.removeItem('student_app_id');
-      router.push('/');
-    }
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/');
   };
 
   return (

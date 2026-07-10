@@ -1,63 +1,77 @@
-// Trigger Vercel Rebuild
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { db, storage } from '@/lib/firebase';
-import { collection, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useRouter } from 'next/router';
+import { db } from '@/lib/firebase';
+import { collection, onSnapshot, doc, getDoc, updateDoc, query, orderBy } from 'firebase/firestore';
+import { useAuth } from '@/lib/AuthContext';
+import { uploadFile } from '@/lib/uploadFile';
+import { STAGES, STAGE_LABELS, STAGE_COLORS } from '@/lib/applicationStages';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const { user, profile, loading } = useAuth();
+
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState({}); // uid -> user profile doc
+  const [dataLoading, setDataLoading] = useState(true);
   const [expandedRow, setExpandedRow] = useState(null);
-  
+
   // State for Admin Actions
-  const [adminNote, setAdminNote] = useState('');
+  const [adminNotes, setAdminNotes] = useState('');
   const [offerFile, setOfferFile] = useState(null);
-  const [statusAction, setStatusAction] = useState('Pending');
+  const [stageAction, setStageAction] = useState('documents_pending');
   const [processingId, setProcessingId] = useState(null);
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  const fetchApplications = async () => {
-    try {
-      const q = query(collection(db, 'applications'), orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(q);
-      const apps = [];
-      querySnapshot.forEach((d) => {
-        apps.push({ id: d.id, ...d.data() });
-      });
-      setApplications(apps);
-    } catch (error) {
-      console.error("Error fetching applications: ", error);
-    } finally {
-      setLoading(false);
+    if (!loading && (!user || profile?.role !== 'admin')) {
+      router.push('/login');
     }
-  };
+  }, [loading, user, profile, router]);
+
+  useEffect(() => {
+    if (!(user && profile?.role === 'admin')) return;
+
+    const q = query(collection(db, 'applications'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(
+      q,
+      async (snapshot) => {
+        const apps = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setApplications(apps);
+
+        const uniqueUids = [...new Set(apps.map((a) => a.studentUid).filter(Boolean))];
+        const profileEntries = await Promise.all(
+          uniqueUids.map(async (uid) => {
+            const snap = await getDoc(doc(db, 'users', uid));
+            return [uid, snap.exists() ? snap.data() : null];
+          })
+        );
+        setProfiles(Object.fromEntries(profileEntries));
+        setDataLoading(false);
+      },
+      (error) => {
+        console.error('Error fetching applications: ', error);
+        setDataLoading(false);
+      }
+    );
+    return () => unsubscribe();
+  }, [user, profile]);
 
   const handleUpdateApplication = async (appId) => {
     setProcessingId(appId);
     try {
       const appRef = doc(db, 'applications', appId);
-      const updates = { status: statusAction, adminNote };
+      const updates = { stage: stageAction, adminNotes, updatedAt: new Date().toISOString() };
 
       if (offerFile) {
-        const storageRef = ref(storage, `documents/offers/${Date.now()}_${offerFile.name}`);
-        await uploadBytes(storageRef, offerFile);
-        updates.offerLetterUrl = await getDownloadURL(storageRef);
+        updates.offerLetterUrl = await uploadFile(offerFile, 'documents/offers');
       }
 
       await updateDoc(appRef, updates);
       alert('Application updated successfully!');
-      
-      // Reset forms and reload
+
       setOfferFile(null);
-      setAdminNote('');
+      setAdminNotes('');
       setExpandedRow(null);
-      fetchApplications();
     } catch (err) {
       console.error(err);
       alert('Error updating application.');
@@ -66,13 +80,10 @@ export default function AdminDashboard() {
     }
   };
 
-  const getStatusColor = (status) => {
-    if (status === 'Accepted') return '#10b981';
-    if (status === 'Offer Sent') return '#3b82f6';
-    if (status === 'Payment Received') return '#8b5cf6';
-    if (status === 'Incomplete') return '#ef4444'; // Red/Warning for Incomplete
-    return '#b8860b'; // Pending
-  };
+  if (loading || (user && profile?.role === 'admin' && dataLoading)) {
+    return <div style={{ textAlign: 'center', padding: '4rem' }}>Loading...</div>;
+  }
+  if (!user || profile?.role !== 'admin') return null;
 
   return (
     <>
@@ -85,36 +96,35 @@ export default function AdminDashboard() {
             <h1 style={{ color: 'var(--secondary)' }}>Applications</h1>
           </div>
 
-          {loading ? (
-            <p>Loading applications...</p>
-          ) : (
-            <div style={{ background: 'white', borderRadius: '12px', padding: '1rem', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ borderBottom: '2px solid var(--border)', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '12px' }}>Student Info</th>
-                    <th style={{ padding: '12px' }}>Program / Level</th>
-                    <th style={{ padding: '12px' }}>Payment Slip</th>
-                    <th style={{ padding: '12px' }}>Status</th>
-                    <th style={{ padding: '12px' }}>Action</th>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '1rem', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid var(--border)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: '12px' }}>Student Info</th>
+                  <th style={{ padding: '12px' }}>Program / Level</th>
+                  <th style={{ padding: '12px' }}>Payment Slip</th>
+                  <th style={{ padding: '12px' }}>Status</th>
+                  <th style={{ padding: '12px' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {applications.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>No applications found.</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {applications.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>No applications found.</td>
-                    </tr>
-                  ) : (
-                    applications.map((app) => (
+                ) : (
+                  applications.map((app) => {
+                    const studentProfile = profiles[app.studentUid] || {};
+                    return (
                       <React.Fragment key={app.id}>
                         <tr style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '12px' }}>
-                            <strong style={{ display: 'block' }}>{app.firstName} {app.lastName}</strong>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.email} | {app.nationality}</span>
+                            <strong style={{ display: 'block' }}>{studentProfile.firstName} {studentProfile.lastName}</strong>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{studentProfile.email} | {studentProfile.nationality || 'N/A'}</span>
                           </td>
                           <td style={{ padding: '12px' }}>
-                            <span style={{ display: 'block' }}>{app.faculty}</span>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.level}</span>
+                            <span style={{ display: 'block' }}>{app.programName}</span>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{app.level} · {app.universityName}</span>
                           </td>
                           <td style={{ padding: '12px' }}>
                             {app.paymentSlipUrl ? (
@@ -124,14 +134,16 @@ export default function AdminDashboard() {
                             )}
                           </td>
                           <td style={{ padding: '12px' }}>
-                            <span style={{ padding: '4px 8px', background: 'rgba(0,0,0,0.05)', color: getStatusColor(app.status), borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', border: `1px solid ${getStatusColor(app.status)}` }}>{app.status || 'Pending'}</span>
+                            <span style={{ padding: '4px 8px', background: 'rgba(0,0,0,0.05)', color: STAGE_COLORS[app.stage], borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', border: `1px solid ${STAGE_COLORS[app.stage] || '#64748b'}` }}>
+                              {STAGE_LABELS[app.stage] || app.stage}
+                            </span>
                           </td>
                           <td style={{ padding: '12px' }}>
-                            <button 
+                            <button
                               onClick={() => {
                                 setExpandedRow(expandedRow === app.id ? null : app.id);
-                                setAdminNote(app.adminNote || '');
-                                setStatusAction(app.status || 'Pending');
+                                setAdminNotes(app.adminNotes || '');
+                                setStageAction(app.stage || 'documents_pending');
                               }}
                               style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
                             >
@@ -140,50 +152,47 @@ export default function AdminDashboard() {
                           </td>
                         </tr>
 
-                        {/* EXPANDED ROW ACTIONS */}
                         {expandedRow === app.id && (
                           <tr style={{ background: 'rgba(15, 26, 60, 0.02)' }}>
                             <td colSpan="5" style={{ padding: '1.5rem', borderBottom: '2px solid var(--border)' }}>
                               <div className="admin-action-row" style={{ display: 'flex', gap: '2rem' }}>
-                                {/* Left Side: Documents & Info */}
                                 <div style={{ flex: 1 }}>
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Application Details</h4>
-                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Passport:</strong> {app.passportNo || 'N/A'} | <strong>DOB:</strong> {app.dob || 'N/A'}</p>
-                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Reference:</strong> {app.reference || 'N/A'}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>DOB:</strong> {studentProfile.dob || 'N/A'} | <strong>Phone:</strong> {studentProfile.phone || 'N/A'}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Reference:</strong> {studentProfile.reference || 'N/A'}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                                    <strong>Documentation Services:</strong> {(app.documentationServices || []).map((s) => (s === 'Other' ? (app.documentationOther || 'Other') : s)).join(', ') || 'None requested'}
+                                    <strong>Documentation Services:</strong> {(studentProfile.documentationServices || []).map((s) => (s === 'Other' ? (studentProfile.documentationOther || 'Other') : s)).join(', ') || 'None requested'}
                                   </p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                                    <strong>Accommodation:</strong> {(app.accommodationTypes || []).join(', ') || 'None requested'}
+                                    <strong>Accommodation:</strong> {(studentProfile.accommodationTypes || []).join(', ') || 'None requested'}
                                   </p>
+                                  {app.googleDriveLink && (
+                                    <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                                      <strong>Google Drive:</strong> <a href={app.googleDriveLink} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)' }}>Open Folder</a>
+                                    </p>
+                                  )}
 
                                   <h5 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Student Documents:</h5>
                                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                    {Object.entries(app.documents || {}).map(([key, url]) => (
+                                    {Object.entries(app.documents || {}).filter(([, url]) => url).map(([key, url]) => (
                                       <a key={key} href={url} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', padding: '4px 8px', background: 'var(--secondary)', color: 'white', borderRadius: '4px' }}>{key}</a>
                                     ))}
                                   </div>
                                 </div>
 
-                                {/* Right Side: Actions */}
                                 <div style={{ flex: 1, background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Admin Actions</h4>
-                                  
+
                                   <div className="form-group">
                                     <label className="form-label">Update Status</label>
-                                    <select className="form-select" value={statusAction} onChange={(e) => setStatusAction(e.target.value)}>
-                                      <option value="Incomplete">Incomplete</option>
-                                      <option value="Pending">Pending</option>
-                                      <option value="Offer Sent">Offer Sent</option>
-                                      <option value="Payment Received">Payment Received</option>
-                                      <option value="Accepted">Accepted</option>
-                                      <option value="Rejected">Rejected</option>
+                                    <select className="form-select" value={stageAction} onChange={(e) => setStageAction(e.target.value)}>
+                                      {STAGES.map((s) => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
                                     </select>
                                   </div>
 
                                   <div className="form-group">
                                     <label className="form-label">Admin Note (Visible to Student)</label>
-                                    <textarea className="form-input" rows="3" value={adminNote} onChange={(e) => setAdminNote(e.target.value)} placeholder="Write a note or instructions for the student..."></textarea>
+                                    <textarea className="form-input" rows="3" value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} placeholder="Write a note or instructions for the student..."></textarea>
                                   </div>
 
                                   <div className="form-group">
@@ -192,8 +201,8 @@ export default function AdminDashboard() {
                                     {app.offerLetterUrl && <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--primary)' }}>* An offer letter was already uploaded previously.</p>}
                                   </div>
 
-                                  <button 
-                                    onClick={() => handleUpdateApplication(app.id)} 
+                                  <button
+                                    onClick={() => handleUpdateApplication(app.id)}
                                     disabled={processingId === app.id}
                                     className="btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
                                     {processingId === app.id ? 'Saving...' : 'Save Updates & Notify Student'}
@@ -204,12 +213,12 @@ export default function AdminDashboard() {
                           </tr>
                         )}
                       </React.Fragment>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

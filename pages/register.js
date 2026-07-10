@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -10,7 +11,7 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  
+
   // Pre-filled with dummy details as requested
   const [formData, setFormData] = useState({
     firstName: 'John',
@@ -28,39 +29,40 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
-    try {
-      // Check if email already exists
-      const q = query(collection(db, 'applications'), where('email', '==', formData.email));
-      const querySnapshot = await getDocs(q);
-      
-      if (!querySnapshot.empty) {
-        setError('An account with this email already exists. Please login.');
-        setLoading(false);
-        return;
-      }
 
-      // Create new basic account
-      const docData = {
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const now = new Date().toISOString();
+
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        uid: cred.user.uid,
+        email: formData.email,
         firstName: formData.firstName,
         lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
         reference: formData.reference,
-        status: 'Incomplete', // Tells dashboard to show the full mandatory form
-        createdAt: new Date().toISOString(),
-      };
+        role: 'student',
+        status: 'active',
+        dob: '',
+        nationality: '',
+        motherName: '',
+        phone: '',
+        documentationServices: [],
+        documentationOther: '',
+        accommodationTypes: [],
+        createdAt: now,
+        updatedAt: now,
+      });
 
-      const docRef = await addDoc(collection(db, 'applications'), docData);
-      
-      // Save ID to localStorage
-      localStorage.setItem('student_app_id', docRef.id);
-      
-      // Hard navigation
-      window.location.href = '/student/dashboard';
+      router.push('/student/dashboard');
     } catch (err) {
       console.error('Error creating account:', err);
-      setError('There was an error creating your account. Please try again.');
+      if (err.code === 'auth/email-already-in-use') {
+        setError('An account with this email already exists. Please login.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('Password must be at least 6 characters.');
+      } else {
+        setError('There was an error creating your account. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -76,9 +78,9 @@ export default function Register() {
           <div style={{ background: 'white', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
             <h2 style={{ textAlign: 'center', marginBottom: '0.5rem', color: 'var(--secondary)' }}>Create Account</h2>
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem' }}>Sign up to access your student portal and complete your application.</p>
-            
+
             {error && <div style={{ background: '#fee2e2', color: '#b91c1c', padding: '10px', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
-            
+
             <form onSubmit={handleSubmit}>
               <div className="responsive-2col" style={{ gap: '1rem' }}>
                 <div className="form-group">

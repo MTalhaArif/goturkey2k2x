@@ -1,5 +1,11 @@
-const token = 'E3Wn4ZcJWrr9FvgEKCyYPzBh6VSo';
+const token = process.env.VERCEL_API_TOKEN;
 const projectName = 'goturkey2k2x'; // From the URL
+
+if (!token) {
+  console.error('Set the VERCEL_API_TOKEN environment variable before running this script.');
+  console.error('Example: VERCEL_API_TOKEN="your-token" node vercel-env.mjs');
+  process.exit(1);
+}
 
 const envs = [
   { key: 'NEXT_PUBLIC_FIREBASE_API_KEY', value: 'AIzaSyDE--rBQgjP7eM2QQr51Tv1Db_pKNXH8Y0' },
