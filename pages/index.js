@@ -3,6 +3,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useSyncExternalStore } from "react";
 import StudyFinder from "@/components/StudyFinder";
+import Reveal from "@/components/Reveal";
 
 const TurkeyGlobe = dynamic(() => import("@/components/TurkeyGlobe"), { ssr: false });
 
@@ -60,31 +61,25 @@ export default function Home() {
       {/* WHY TÜRKIYE / WHY US SECTION */}
       <section className="section section-bg">
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2>Why Choose Türkiye & GoTurkey 2k2x?</h2>
             <p>We provide a seamless transition to your dream education in Turkey.</p>
-          </div>
+          </Reveal>
           <div className="grid-4">
-            <div className="card text-center">
-              <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>🌉</div>
-              <h3 className="card-title">Bridge to the World</h3>
-              <p className="card-text">Sitting at the crossroads of two continents, Europe and Asia, it offers a diverse cultural experience like no other.</p>
-            </div>
-            <div className="card text-center">
-              <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>🎓</div>
-              <h3 className="card-title">Quality Education</h3>
-              <p className="card-text">Learn at 21st-century technological campuses and choose from nearly 45,000 degree programs globally recognized.</p>
-            </div>
-            <div className="card text-center">
-              <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>✅</div>
-              <h3 className="card-title">Guaranteed Acceptance</h3>
-              <p className="card-text">We secure your university acceptance within 15 days through our extensive partner network.</p>
-            </div>
-            <div className="card text-center">
-              <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>🤝</div>
-              <h3 className="card-title">Post-Landing Services</h3>
-              <p className="card-text">Airport pickup, accommodation, SIM card, transport card, residency, and bank account setup.</p>
-            </div>
+            {[
+              { icon: "🌉", title: "Bridge to the World", desc: "Sitting at the crossroads of two continents, Europe and Asia, it offers a diverse cultural experience like no other." },
+              { icon: "🎓", title: "Quality Education", desc: "Learn at 21st-century technological campuses and choose from nearly 45,000 degree programs globally recognized." },
+              { icon: "✅", title: "Guaranteed Acceptance", desc: "We secure your university acceptance within 15 days through our extensive partner network." },
+              { icon: "🤝", title: "Post-Landing Services", desc: "Airport pickup, accommodation, SIM card, transport card, residency, and bank account setup." },
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={i * 90}>
+                <div className="card text-center">
+                  <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>{item.icon}</div>
+                  <h3 className="card-title">{item.title}</h3>
+                  <p className="card-text">{item.desc}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -93,7 +88,7 @@ export default function Home() {
       <section className="section" style={{ background: "linear-gradient(to right, #0F1A3C, #1a2a5c)", color: "white" }}>
         <div className="container">
           <div className="responsive-2col" style={{ gap: "4rem", alignItems: "center" }}>
-            <div>
+            <Reveal>
               <div style={{ background: "var(--primary)", display: "inline-block", padding: "6px 12px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "1rem", letterSpacing: "1px" }}>BATCH 1 - 2026 • STARTING SOON</div>
               <h2 style={{ fontSize: "3rem", marginBottom: "1rem", lineHeight: "1.1" }}>1 Month of<br/><span style={{ color: "var(--accent)" }}>Turkish Learning</span></h2>
               <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "rgba(255,255,255,0.8)" }}>Are you coming to Türkiye on a Study Visa or for a Visit? Your journey starts with a word! Learn the language to feel like a local on your first day.</p>
@@ -117,9 +112,9 @@ export default function Home() {
                     DM on Instagram
                  </a>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="responsive-2col" style={{ gap: "1rem" }}>
+            <Reveal delay={150} className="responsive-2col" style={{ gap: "1rem" }}>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
                 <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>📹 Online Classes on Zoom</h4>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Learn from anywhere, anytime with interactive sessions.</p>
@@ -136,7 +131,7 @@ export default function Home() {
                 <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>📜 Certificate of Completion</h4>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Add value to your future with official certification.</p>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -144,10 +139,10 @@ export default function Home() {
       {/* 5 STEPS */}
       <section className="section" style={{ background: "#f8fafc" }}>
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2>APPLY IN 5 STEPS</h2>
             <p>Your journey to studying in Türkiye is simple and straightforward.</p>
-          </div>
+          </Reveal>
           <div className="grid-3">
             {[
               { num: 1, title: "Explore Programs", desc: "Use our tools to find the perfect university and degree program." },
@@ -156,13 +151,15 @@ export default function Home() {
               { num: 4, title: "Get Acceptance", desc: "Receive your acceptance letter within 15 days." },
               { num: 5, title: "Visa & Travel", desc: "Apply for your student visa and let us handle your post-landing needs." }
             ].map((step, i) => (
-              <div key={i} className="card" style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-                <div style={{ fontSize: "3rem", fontWeight: "900", color: "var(--primary)", opacity: 0.3, lineHeight: 1 }}>{step.num}</div>
-                <div>
-                  <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>{step.title}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{step.desc}</p>
+              <Reveal key={step.num} delay={(i % 3) * 90}>
+                <div className="card" style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
+                  <div style={{ fontSize: "3rem", fontWeight: "900", color: "var(--primary)", opacity: 0.3, lineHeight: 1 }}>{step.num}</div>
+                  <div>
+                    <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>{step.title}</h3>
+                    <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>{step.desc}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -171,25 +168,27 @@ export default function Home() {
       {/* STUDENTS SAY */}
       <section className="section section-bg">
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2>What Our Students Say</h2>
             <p>Read about the experiences of international students currently studying in Türkiye.</p>
-          </div>
+          </Reveal>
           <div className="grid-3">
             {students.map((s, i) => (
-              <div key={i} className="card" style={{ position: "relative", paddingTop: "2.5rem" }}>
-                <div style={{ position: "absolute", top: "10px", left: "20px", fontSize: "4rem", color: "var(--primary)", opacity: 0.1, fontFamily: "serif", lineHeight: 1 }}>"</div>
-                <p style={{ fontStyle: "italic", color: "var(--text-muted)", marginBottom: "1.5rem" }}>{s.quote}</p>
-                <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                   <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--secondary)", color: "white", display: "flex", justifyContent: "center", alignItems: "center", fontWeight: "bold" }}>
-                      {s.name.charAt(0)}
-                   </div>
-                   <div>
-                      <h4 style={{ color: "var(--secondary)", fontSize: "1rem" }}>{s.name}</h4>
-                      <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{s.faculty} | {s.country}</p>
-                   </div>
+              <Reveal key={s.name} delay={i * 100}>
+                <div className="card" style={{ position: "relative", paddingTop: "2.5rem" }}>
+                  <div style={{ position: "absolute", top: "10px", left: "20px", fontSize: "4rem", color: "var(--primary)", opacity: 0.1, fontFamily: "serif", lineHeight: 1 }}>&quot;</div>
+                  <p style={{ fontStyle: "italic", color: "var(--text-muted)", marginBottom: "1.5rem" }}>{s.quote}</p>
+                  <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
+                     <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "var(--secondary)", color: "white", display: "flex", justifyContent: "center", alignItems: "center", fontWeight: "bold" }}>
+                        {s.name.charAt(0)}
+                     </div>
+                     <div>
+                        <h4 style={{ color: "var(--secondary)", fontSize: "1rem" }}>{s.name}</h4>
+                        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>{s.faculty} | {s.country}</p>
+                     </div>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -197,11 +196,11 @@ export default function Home() {
       
       {/* CTA SECTION */}
       <section className="section text-center" style={{ background: "linear-gradient(135deg, var(--primary) 0%, #a01010 60%, var(--secondary) 100%)", color: "white" }}>
-        <div className="container">
+        <Reveal as="div" className="container">
           <h2 style={{ color: "white", marginBottom: "1rem" }}>Ready to Start Your Journey?</h2>
           <p className="mb-8" style={{ color: "rgba(255,255,255,0.8)", fontSize: "1.1rem" }}>Join thousands of students who have trusted us with their future.</p>
           <Link href="/register" className="btn-primary" style={{ fontSize: "1.1rem", padding: "12px 32px", background: "white", color: "var(--primary) !important" }}>Start Your Application</Link>
-        </div>
+        </Reveal>
       </section>
     </>
   );

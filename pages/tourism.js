@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { destinations } from '@/lib/destinations';
 import { travelBlogPosts } from '@/lib/travelBlog';
+import Reveal from '@/components/Reveal';
 
 const DestinationsMap = dynamic(() => import('@/components/DestinationsMap'), { ssr: false });
 
@@ -15,27 +16,29 @@ export default function Tourism() {
 
       <div className="section section-bg">
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2>Discover Türkiye</h2>
             <p>Beyond your studies, Türkiye offers centuries of history, stunning coastlines, and unforgettable culture. Here&apos;s a taste of what&apos;s waiting for you.</p>
-          </div>
+          </Reveal>
 
           {/* MAP */}
-          <div style={{ marginBottom: '4rem' }}>
+          <Reveal delay={100} style={{ marginBottom: '4rem' }}>
             <DestinationsMap />
-          </div>
+          </Reveal>
 
           {/* DESTINATIONS */}
           <div className="section-header" style={{ marginBottom: '40px' }}>
             <h2 style={{ fontSize: '2rem' }}>Top Destinations</h2>
           </div>
           <div className="grid-3" style={{ marginBottom: '5rem' }}>
-            {destinations.map((dest) => (
-              <div key={dest.name} className="card">
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{dest.region}</span>
-                <h3 className="card-title" style={{ marginTop: '0.5rem' }}>{dest.name}</h3>
-                <p className="card-text">{dest.description}</p>
-              </div>
+            {destinations.map((dest, i) => (
+              <Reveal key={dest.name} delay={(i % 3) * 90}>
+                <div className="card">
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{dest.region}</span>
+                  <h3 className="card-title" style={{ marginTop: '0.5rem' }}>{dest.name}</h3>
+                  <p className="card-text">{dest.description}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
 
@@ -45,11 +48,13 @@ export default function Tourism() {
             <p>A few reads to get you excited about life in Türkiye.</p>
           </div>
           <div className="grid-3">
-            {travelBlogPosts.map((post) => (
-              <div key={post.title} className="card">
-                <h3 className="card-title">{post.title}</h3>
-                <p className="card-text">{post.excerpt}</p>
-              </div>
+            {travelBlogPosts.map((post, i) => (
+              <Reveal key={post.title} delay={(i % 3) * 90}>
+                <div className="card">
+                  <h3 className="card-title">{post.title}</h3>
+                  <p className="card-text">{post.excerpt}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
 

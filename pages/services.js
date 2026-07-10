@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Reveal from "@/components/Reveal";
 
 export default function Services() {
   const services = [
@@ -19,16 +20,18 @@ export default function Services() {
       </Head>
       <div className="section section-bg">
         <div className="container">
-          <div className="section-header">
+          <Reveal className="section-header">
             <h2>Post-Landing & Academic Services</h2>
             <p>We ensure you are comfortable and ready to focus on your studies from the moment you arrive in Turkey.</p>
-          </div>
+          </Reveal>
           <div className="grid-4">
             {services.map((s, i) => (
-              <div key={i} className="card">
-                <h3 className="card-title">{s.title}</h3>
-                <p className="card-text">{s.desc}</p>
-              </div>
+              <Reveal key={s.title} delay={(i % 4) * 90}>
+                <div className="card">
+                  <h3 className="card-title">{s.title}</h3>
+                  <p className="card-text">{s.desc}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>

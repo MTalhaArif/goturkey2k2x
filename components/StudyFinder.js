@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { universities } from '@/lib/universities';
 import { filterUniversities } from '@/lib/universityFilters';
+import Reveal from '@/components/Reveal';
 
 export default function StudyFinder() {
   const [term, setTerm] = useState('');
@@ -15,12 +16,12 @@ export default function StudyFinder() {
   return (
     <section className="section" style={{ background: '#f8fafc' }}>
       <div className="container">
-        <div className="section-header">
+        <Reveal className="section-header">
           <h2>Find Your University & Program</h2>
           <p>Search by university name, city, or program, e.g. &quot;Medicine&quot; or &quot;Koç&quot;.</p>
-        </div>
+        </Reveal>
 
-        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+        <Reveal delay={100} as="div" style={{ maxWidth: '640px', margin: '0 auto' }}>
           <input
             type="text"
             className="form-input"
@@ -68,7 +69,7 @@ export default function StudyFinder() {
             <Link href="/universities" className="btn-secondary" style={{ marginRight: '1rem' }}>Browse All Universities</Link>
             <Link href="/register" className="btn-primary">Apply Now</Link>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

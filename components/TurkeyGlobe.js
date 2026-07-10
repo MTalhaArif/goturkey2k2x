@@ -3,9 +3,13 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { destinations } from '@/lib/destinations';
 
-const NAVY = '#0F1A3C';
+const NAVY = '#1a2a5c';
 const GOLD = '#FFD700';
-const RED = '#E31C25';
+const ACCENT_RIM = '#3a5aa8';
+
+const CORE_RADIUS = 1.5;
+const RIM_RADIUS = 1.6;
+const MARKER_RADIUS = 1.85; // well clear of the rim shell so it never z-fights
 
 function latLngToVector3(lat, lng, radius) {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -19,7 +23,7 @@ function latLngToVector3(lat, lng, radius) {
 
 function Markers() {
   const positions = useMemo(
-    () => destinations.map((d) => ({ name: d.name, position: latLngToVector3(d.lat, d.lng, 1.55) })),
+    () => destinations.map((d) => ({ name: d.name, position: latLngToVector3(d.lat, d.lng, MARKER_RADIUS) })),
     []
   );
 
@@ -27,8 +31,8 @@ function Markers() {
     <>
       {positions.map((d) => (
         <mesh key={d.name} position={d.position}>
-          <sphereGeometry args={[0.035, 12, 12]} />
-          <meshStandardMaterial color={GOLD} emissive={GOLD} emissiveIntensity={1.5} toneMapped={false} />
+          <sphereGeometry args={[0.09, 12, 12]} />
+          <meshStandardMaterial color={GOLD} emissive={GOLD} emissiveIntensity={2.5} toneMapped={false} />
         </mesh>
       ))}
     </>
@@ -45,12 +49,12 @@ function RotatingGlobe() {
   return (
     <group ref={groupRef}>
       <mesh>
-        <sphereGeometry args={[1.5, 40, 40]} />
-        <meshStandardMaterial color={NAVY} roughness={0.6} metalness={0.2} />
+        <sphereGeometry args={[CORE_RADIUS, 40, 40]} />
+        <meshStandardMaterial color={NAVY} emissive={NAVY} emissiveIntensity={0.35} roughness={0.5} metalness={0.1} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[1.58, 40, 40]} />
-        <meshBasicMaterial color={RED} transparent opacity={0.08} side={THREE.BackSide} />
+        <sphereGeometry args={[RIM_RADIUS, 40, 40]} />
+        <meshBasicMaterial color={ACCENT_RIM} transparent opacity={0.25} side={THREE.BackSide} />
       </mesh>
       <Markers />
     </group>
@@ -59,9 +63,10 @@ function RotatingGlobe() {
 
 export default function TurkeyGlobe() {
   return (
-    <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ alpha: true }} style={{ width: '100%', height: '100%' }}>
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[3, 3, 5]} intensity={1.2} />
+    <Canvas camera={{ position: [0, 0, 6], fov: 45 }} gl={{ alpha: true }} style={{ width: '100%', height: '100%' }}>
+      <ambientLight intensity={1.1} />
+      <directionalLight position={[4, 3, 5]} intensity={1.8} />
+      <directionalLight position={[-4, -2, 3]} intensity={0.6} />
       <RotatingGlobe />
     </Canvas>
   );
