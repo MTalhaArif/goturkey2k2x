@@ -32,14 +32,18 @@ export default function About() {
             {/* CEO Profile */}
             <Reveal>
               <div className="card text-center" style={{ borderTop: "4px solid var(--primary)" }}>
-                <div style={{ width: "150px", height: "150px", borderRadius: "50%", background: "var(--secondary)", color: "white", margin: "0 auto 1.5rem auto", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "3rem", fontWeight: "bold" }}>
-                  MA
+                <div style={{ width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
+                  <img src="/talha.jpg" alt="Muhammad Talha Arif" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>Muhammad Talha Arif</h3>
                 <h4 style={{ color: "var(--primary)", fontSize: "1rem", marginBottom: "1rem" }}>Chief Executive Officer (CEO)</h4>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
                   As the CEO and visionary behind GoTurkey 2k2x, Muhammad Talha Arif leads the strategic direction of the company. With a profound understanding of international education dynamics and technology, he has built a robust network of Turkish university partnerships, ensuring students receive premium consulting and guaranteed pathways to their dream careers.
                 </p>
+                <div style={{ marginTop: "1rem", display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+                  <a href="https://www.instagram.com/goturkey2k2x?igsh=N2ZzODBhYmQzZWZn&utm_source=qr" target="_blank" rel="noreferrer" style={{ color: "var(--primary)", fontWeight: "bold", fontSize: "0.9rem" }}>View on Instagram →</a>
+                  <a href="https://www.upwork.com/freelancers/trproductions" target="_blank" rel="noreferrer" style={{ color: "var(--primary)", fontWeight: "bold", fontSize: "0.9rem" }}>View on Upwork →</a>
+                </div>
               </div>
             </Reveal>
 
