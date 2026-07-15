@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import DashboardLayout from "@/components/DashboardLayout";
+import ChatWidget from "@/components/ChatWidget";
 import { AuthProvider } from "@/lib/AuthContext";
 import { useRouter } from "next/router";
 
@@ -27,6 +28,7 @@ export default function App({ Component, pageProps }) {
           <Component {...pageProps} />
         </Layout>
       )}
+      <ChatWidget />
     </AuthProvider>
   );
 }
