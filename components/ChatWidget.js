@@ -79,11 +79,16 @@ export default function ChatWidget() {
   return (
     <>
       <button
-        className="chat-bubble"
+        className={`chat-bubble${open ? ' chat-bubble-open' : ''}`}
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? 'Close chat' : 'Open chat assistant'}
       >
-        {open ? '✕' : '💬'}
+        {open ? '✕' : (
+          <>
+            <span>Let me guide you</span>
+            <span style={{ fontSize: '1.2em' }}>😊</span>
+          </>
+        )}
       </button>
 
       {open && (
