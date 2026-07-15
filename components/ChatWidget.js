@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-
-const STARTERS = [
-  'What documents do I need?',
-  'How do I apply?',
-  'What services do you offer after I land?',
-];
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function ChatWidget() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [errorText, setErrorText] = useState('');
   const bodyRef = useRef(null);
+
+  const starters = [t('chatWidget.starter1'), t('chatWidget.starter2'), t('chatWidget.starter3')];
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -39,7 +37,7 @@ export default function ChatWidget() {
 
       if (!response.ok || !response.body) {
         const data = await response.json().catch(() => null);
-        setErrorText(data?.error || 'The assistant is temporarily unavailable. Please try again shortly.');
+        setErrorText(data?.error || t('chatWidget.genericError'));
         setStreaming(false);
         return;
       }
@@ -65,7 +63,7 @@ export default function ChatWidget() {
       }
     } catch (error) {
       console.error('Chat error:', error);
-      setErrorText('The assistant is temporarily unavailable. Please try again shortly.');
+      setErrorText(t('chatWidget.genericError'));
     } finally {
       setStreaming(false);
     }
@@ -81,11 +79,11 @@ export default function ChatWidget() {
       <button
         className={`chat-bubble${open ? ' chat-bubble-open' : ''}`}
         onClick={() => setOpen((o) => !o)}
-        aria-label={open ? 'Close chat' : 'Open chat assistant'}
+        aria-label={open ? t('chatWidget.closeAria') : t('chatWidget.openAria')}
       >
         {open ? '✕' : (
           <>
-            <span>Let me guide you</span>
+            <span>{t('chatWidget.bubbleLabel')}</span>
             <span style={{ fontSize: '1.2em' }}>😊</span>
           </>
         )}
@@ -95,12 +93,12 @@ export default function ChatWidget() {
         <div className="chat-panel">
           <div className="chat-panel-header">
             <div>
-              <div style={{ fontWeight: 700 }}>GoTurkey Assistant</div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.85 }}>Ask about applications, documents & more</div>
+              <div style={{ fontWeight: 700 }}>{t('chatWidget.panelTitle')}</div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.85 }}>{t('chatWidget.panelSubtitle')}</div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              aria-label="Close chat"
+              aria-label={t('chatWidget.closeAria')}
               style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.2rem', cursor: 'pointer', lineHeight: 1 }}
             >
               ✕
@@ -111,9 +109,9 @@ export default function ChatWidget() {
             {messages.length === 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                  Hi! I can help with questions about applications, documents, and our services. Try:
+                  {t('chatWidget.intro')}
                 </p>
-                {STARTERS.map((starter) => (
+                {starters.map((starter) => (
                   <button key={starter} className="chat-starter" onClick={() => sendMessage(starter)}>
                     {starter}
                   </button>
@@ -144,12 +142,12 @@ export default function ChatWidget() {
             <input
               type="text"
               className="chat-input"
-              placeholder="Type your question..."
+              placeholder={t('chatWidget.inputPlaceholder')}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={streaming}
             />
-            <button type="submit" className="chat-send" disabled={streaming || !input.trim()} aria-label="Send">
+            <button type="submit" className="chat-send" disabled={streaming || !input.trim()} aria-label={t('chatWidget.sendAria')}>
               ➤
             </button>
           </form>

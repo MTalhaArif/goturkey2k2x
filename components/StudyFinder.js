@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { universities } from '@/lib/universities';
 import { filterUniversities } from '@/lib/universityFilters';
 import Reveal from '@/components/Reveal';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function StudyFinder() {
+  const { t } = useTranslation();
   const [term, setTerm] = useState('');
   const [privateOnly, setPrivateOnly] = useState(true);
 
@@ -17,15 +19,15 @@ export default function StudyFinder() {
     <section className="section" style={{ background: '#f8fafc' }}>
       <div className="container">
         <Reveal className="section-header">
-          <h2>Find Your University & Program</h2>
-          <p>Search by university name, city, or program, e.g. &quot;Medicine&quot; or &quot;Koç&quot;.</p>
+          <h2>{t('studyFinder.title')}</h2>
+          <p>{t('studyFinder.subtitle')}</p>
         </Reveal>
 
         <Reveal delay={100} as="div" style={{ maxWidth: '640px', margin: '0 auto' }}>
           <input
             type="text"
             className="form-input"
-            placeholder="Search universities, cities, or programs..."
+            placeholder={t('studyFinder.searchPlaceholder')}
             value={term}
             onChange={(e) => setTerm(e.target.value)}
             style={{ fontSize: '1.05rem', padding: '16px 20px' }}
@@ -33,14 +35,14 @@ export default function StudyFinder() {
 
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
             <input type="checkbox" checked={privateOnly} onChange={(e) => setPrivateOnly(e.target.checked)} />
-            Private universities only
+            {t('studyFinder.privateOnly')}
           </label>
 
           {term.trim() && (
             <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {results.length === 0 ? (
                 <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                  No matches found. Try a different program, city, or university name.
+                  {t('studyFinder.noResults')}
                 </p>
               ) : (
                 results.map((uni) => (
@@ -66,8 +68,8 @@ export default function StudyFinder() {
           )}
 
           <div className="text-center mt-4">
-            <Link href="/universities" className="btn-secondary" style={{ marginRight: '1rem' }}>Browse All Universities</Link>
-            <Link href="/register" className="btn-primary">Apply Now</Link>
+            <Link href="/universities" className="btn-secondary" style={{ marginInlineEnd: '1rem' }}>{t('studyFinder.browseAll')}</Link>
+            <Link href="/register" className="btn-primary">{t('studyFinder.applyNow')}</Link>
           </div>
         </Reveal>
       </div>

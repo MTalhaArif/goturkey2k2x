@@ -5,10 +5,12 @@ import { db } from '@/lib/firebase';
 import { collection, onSnapshot, doc, getDoc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { useAuth } from '@/lib/AuthContext';
 import { uploadFile } from '@/lib/uploadFile';
-import { STAGES, STAGE_LABELS, STAGE_COLORS } from '@/lib/applicationStages';
+import { STAGES, STAGE_COLORS } from '@/lib/applicationStages';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const { t, locale } = useTranslation();
   const { user, profile, loading } = useAuth();
 
   const [applications, setApplications] = useState([]);
@@ -75,9 +77,9 @@ export default function AdminDashboard() {
       await updateDoc(appRef, updates);
 
       if (offerUploadFailed) {
-        alert('Status and notes were saved, but the offer letter file could not be uploaded. The student will NOT see an offer letter yet — please try attaching it again.');
+        alert(t('admin.dashboard.alertOfferFailed'));
       } else {
-        alert('Application updated successfully!');
+        alert(t('admin.dashboard.alertSuccess'));
       }
 
       setOfferFile(null);
@@ -85,43 +87,43 @@ export default function AdminDashboard() {
       setExpandedRow(null);
     } catch (err) {
       console.error(err);
-      alert('Error updating application.');
+      alert(t('admin.dashboard.alertError'));
     } finally {
       setProcessingId(null);
     }
   };
 
   if (loading || (user && profile?.role === 'admin' && dataLoading)) {
-    return <div style={{ textAlign: 'center', padding: '4rem' }}>Loading...</div>;
+    return <div style={{ textAlign: 'center', padding: '4rem' }}>{t('admin.dashboard.loading')}</div>;
   }
   if (!user || profile?.role !== 'admin') return null;
 
   return (
     <>
       <Head>
-        <title>Admin Dashboard | GoTurkey 2k2x</title>
+        <title>{t('admin.dashboard.metaTitle')}</title>
       </Head>
       <div style={{ padding: '0', minHeight: '100vh' }}>
         <div className="container" style={{ maxWidth: '1400px', padding: '0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ color: 'var(--secondary)' }}>Applications</h1>
+            <h1 style={{ color: 'var(--secondary)' }}>{t('admin.dashboard.title')}</h1>
           </div>
 
           <div style={{ background: 'white', borderRadius: '12px', padding: '1rem', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: locale === 'ar' ? 'right' : 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid var(--border)', color: 'var(--text-muted)' }}>
-                  <th style={{ padding: '12px' }}>Student Info</th>
-                  <th style={{ padding: '12px' }}>Program / Level</th>
-                  <th style={{ padding: '12px' }}>Payment Slip</th>
-                  <th style={{ padding: '12px' }}>Status</th>
-                  <th style={{ padding: '12px' }}>Action</th>
+                  <th style={{ padding: '12px' }}>{t('admin.dashboard.colStudent')}</th>
+                  <th style={{ padding: '12px' }}>{t('admin.dashboard.colProgram')}</th>
+                  <th style={{ padding: '12px' }}>{t('admin.dashboard.colPayment')}</th>
+                  <th style={{ padding: '12px' }}>{t('admin.dashboard.colStatus')}</th>
+                  <th style={{ padding: '12px' }}>{t('admin.dashboard.colAction')}</th>
                 </tr>
               </thead>
               <tbody>
                 {applications.length === 0 ? (
                   <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>No applications found.</td>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>{t('admin.dashboard.noApplications')}</td>
                   </tr>
                 ) : (
                   applications.map((app) => {
@@ -131,7 +133,7 @@ export default function AdminDashboard() {
                         <tr style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '12px' }}>
                             <strong style={{ display: 'block' }}>{studentProfile.firstName} {studentProfile.lastName}</strong>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{studentProfile.email} | {studentProfile.nationality || 'N/A'}</span>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{studentProfile.email} | {studentProfile.nationality || t('admin.dashboard.notAvailable')}</span>
                           </td>
                           <td style={{ padding: '12px' }}>
                             <span style={{ display: 'block' }}>{app.programName}</span>
@@ -139,14 +141,14 @@ export default function AdminDashboard() {
                           </td>
                           <td style={{ padding: '12px' }}>
                             {app.paymentSlipUrl ? (
-                              <a href={app.paymentSlipUrl} target="_blank" rel="noreferrer" style={{ padding: '4px 8px', background: '#8b5cf6', color: 'white', borderRadius: '4px', fontSize: '0.8rem' }}>View Slip</a>
+                              <a href={app.paymentSlipUrl} target="_blank" rel="noreferrer" style={{ padding: '4px 8px', background: '#8b5cf6', color: 'white', borderRadius: '4px', fontSize: '0.8rem' }}>{t('admin.dashboard.viewSlip')}</a>
                             ) : (
-                              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Not uploaded</span>
+                              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('admin.dashboard.notUploaded')}</span>
                             )}
                           </td>
                           <td style={{ padding: '12px' }}>
                             <span style={{ padding: '4px 8px', background: 'rgba(0,0,0,0.05)', color: STAGE_COLORS[app.stage], borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold', border: `1px solid ${STAGE_COLORS[app.stage] || '#64748b'}` }}>
-                              {STAGE_LABELS[app.stage] || app.stage}
+                              {t(`stages.${app.stage}`)}
                             </span>
                           </td>
                           <td style={{ padding: '12px' }}>
@@ -158,7 +160,7 @@ export default function AdminDashboard() {
                               }}
                               style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
                             >
-                              {expandedRow === app.id ? 'Close' : 'Review & Act'}
+                              {expandedRow === app.id ? t('admin.dashboard.close') : t('admin.dashboard.reviewAndAct')}
                             </button>
                           </td>
                         </tr>
@@ -168,55 +170,55 @@ export default function AdminDashboard() {
                             <td colSpan="5" style={{ padding: '1.5rem', borderBottom: '2px solid var(--border)' }}>
                               <div className="admin-action-row" style={{ display: 'flex', gap: '2rem' }}>
                                 <div style={{ flex: 1 }}>
-                                  <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Application Details</h4>
-                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>DOB:</strong> {studentProfile.dob || 'N/A'} | <strong>Phone:</strong> {studentProfile.phone || 'N/A'}</p>
-                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Reference:</strong> {studentProfile.reference || 'N/A'}</p>
+                                  <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>{t('admin.dashboard.applicationDetails')}</h4>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.dob')}</strong> {studentProfile.dob || t('admin.dashboard.notAvailable')} | <strong>{t('admin.dashboard.phone')}</strong> {studentProfile.phone || t('admin.dashboard.notAvailable')}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.reference')}</strong> {studentProfile.reference || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                                    <strong>Documentation Services:</strong> {(studentProfile.documentationServices || []).map((s) => (s === 'Other' ? (studentProfile.documentationOther || 'Other') : s)).join(', ') || 'None requested'}
+                                    <strong>{t('admin.dashboard.documentationServices')}</strong> {(studentProfile.documentationServices || []).map((s) => (s === 'Other' ? (studentProfile.documentationOther || t('student.profileGate.other')) : t(`documentationOptions.${s}`))).join(', ') || t('admin.dashboard.noneRequested')}
                                   </p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                                    <strong>Accommodation:</strong> {(studentProfile.accommodationTypes || []).join(', ') || 'None requested'}
+                                    <strong>{t('admin.dashboard.accommodation')}</strong> {(studentProfile.accommodationTypes || []).map((a) => t(`accommodationOptions.${a}`)).join(', ') || t('admin.dashboard.noneRequested')}
                                   </p>
                                   {app.googleDriveLink && (
                                     <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                                      <strong>Google Drive:</strong> <a href={app.googleDriveLink} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)' }}>Open Folder</a>
+                                      <strong>{t('admin.dashboard.googleDrive')}</strong> <a href={app.googleDriveLink} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)' }}>{t('admin.dashboard.openFolder')}</a>
                                     </p>
                                   )}
 
-                                  <h5 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Student Documents:</h5>
+                                  <h5 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>{t('admin.dashboard.studentDocuments')}</h5>
                                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                                     {Object.entries(app.documents || {}).filter(([, url]) => url).map(([key, url]) => (
-                                      <a key={key} href={url} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', padding: '4px 8px', background: 'var(--secondary)', color: 'white', borderRadius: '4px' }}>{key}</a>
+                                      <a key={key} href={url} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', padding: '4px 8px', background: 'var(--secondary)', color: 'white', borderRadius: '4px' }}>{t(`documentLabels.${key}`)}</a>
                                     ))}
                                   </div>
                                 </div>
 
                                 <div style={{ flex: 1, background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                                  <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>Admin Actions</h4>
+                                  <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>{t('admin.dashboard.adminActions')}</h4>
 
                                   <div className="form-group">
-                                    <label className="form-label">Update Status</label>
+                                    <label className="form-label">{t('admin.dashboard.updateStatus')}</label>
                                     <select className="form-select" value={stageAction} onChange={(e) => setStageAction(e.target.value)}>
-                                      {STAGES.map((s) => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
+                                      {STAGES.map((s) => <option key={s} value={s}>{t(`stages.${s}`)}</option>)}
                                     </select>
                                   </div>
 
                                   <div className="form-group">
-                                    <label className="form-label">Admin Note (Visible to Student)</label>
-                                    <textarea className="form-input" rows="3" value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} placeholder="Write a note or instructions for the student..."></textarea>
+                                    <label className="form-label">{t('admin.dashboard.adminNoteLabel')}</label>
+                                    <textarea className="form-input" rows="3" value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} placeholder={t('admin.dashboard.adminNotePlaceholder')}></textarea>
                                   </div>
 
                                   <div className="form-group">
-                                    <label className="form-label">Upload Offer Letter / Document</label>
+                                    <label className="form-label">{t('admin.dashboard.uploadOfferLabel')}</label>
                                     <input type="file" className="form-input" onChange={(e) => setOfferFile(e.target.files[0])} accept=".pdf,.jpg,.jpeg" />
-                                    {app.offerLetterUrl && <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--primary)' }}>* An offer letter was already uploaded previously.</p>}
+                                    {app.offerLetterUrl && <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--primary)' }}>{t('admin.dashboard.offerAlreadyUploaded')}</p>}
                                   </div>
 
                                   <button
                                     onClick={() => handleUpdateApplication(app.id)}
                                     disabled={processingId === app.id}
                                     className="btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
-                                    {processingId === app.id ? 'Saving...' : 'Save Updates & Notify Student'}
+                                    {processingId === app.id ? t('admin.dashboard.saving') : t('admin.dashboard.saveUpdates')}
                                   </button>
                                 </div>
                               </div>

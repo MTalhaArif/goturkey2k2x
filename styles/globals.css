@@ -196,3 +196,24 @@ button { font-family: var(--font-body); }
   .chat-bubble { bottom: 16px; right: 16px; height: 50px; padding: 0 18px 0 16px; font-size: 13px; }
   .chat-bubble-open { width: 50px; min-width: 50px; padding: 0; font-size: 20px; }
 }
+
+/* ─── LANGUAGE SWITCHER ───────────────────── */
+.lang-switcher { position: relative; display: inline-block; }
+.lang-switcher-trigger { display: flex; align-items: center; gap: 5px; background: transparent; border: 1px solid currentColor; opacity: 0.85; color: inherit; font: inherit; font-size: 0.85rem; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.lang-switcher-trigger:hover { opacity: 1; }
+.lang-switcher-caret { font-size: 0.7em; }
+.lang-switcher-menu { position: absolute; top: calc(100% + 6px); right: 0; background: white; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.15); min-width: 130px; padding: 6px; z-index: 2000; }
+.lang-switcher-item { display: block; width: 100%; text-align: left; background: none; border: none; padding: 8px 10px; border-radius: 6px; font-size: 0.9rem; color: var(--text-main); cursor: pointer; }
+.lang-switcher-item:hover { background: var(--bg-color); }
+.lang-switcher-item-active { color: var(--primary); font-weight: 700; }
+
+/* ─── RTL (Arabic) ─────────────────────────── */
+[dir="rtl"] .chat-bubble { right: auto; left: 24px; }
+[dir="rtl"] .chat-bubble-open { right: auto; left: 24px; }
+[dir="rtl"] .chat-starter { text-align: right; }
+[dir="rtl"] .lang-switcher-menu { right: auto; left: 0; }
+[dir="rtl"] .lang-switcher-item { text-align: right; }
+@media (max-width: 480px) {
+  [dir="rtl"] .chat-panel { right: 0; left: 0; }
+  [dir="rtl"] .chat-bubble { left: 16px; right: auto; }
+}

@@ -3,6 +3,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { universities } from '@/lib/universities';
 import { filterUniversities } from '@/lib/universityFilters';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const LEVELS = ['Vocational School', 'Undergraduate', "Master's", 'Ph.D.'];
 
@@ -13,6 +14,7 @@ const emptyDocuments = {
 };
 
 export default function NewApplicationFlow({ uid, onCreated, onCancel }) {
+  const { t, locale } = useTranslation();
   const [term, setTerm] = useState('');
   const [privateOnly, setPrivateOnly] = useState(true);
   const [selectedUniversity, setSelectedUniversity] = useState(null);
@@ -50,7 +52,7 @@ export default function NewApplicationFlow({ uid, onCreated, onCancel }) {
       onCreated(docRef.id);
     } catch (error) {
       console.error('Error creating application:', error);
-      alert('There was an error starting your application. Please try again.');
+      alert(t('student.newApplicationFlow.errorCreating'));
     } finally {
       setCreating(false);
     }
@@ -60,31 +62,31 @@ export default function NewApplicationFlow({ uid, onCreated, onCancel }) {
     return (
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h2 style={{ color: 'var(--secondary)', fontSize: '1.3rem' }}>Choose a University</h2>
-          <button onClick={onCancel} className="btn-secondary" style={{ padding: '8px 16px' }}>Cancel</button>
+          <h2 style={{ color: 'var(--secondary)', fontSize: '1.3rem' }}>{t('student.newApplicationFlow.chooseUniversity')}</h2>
+          <button onClick={onCancel} className="btn-secondary" style={{ padding: '8px 16px' }}>{t('student.newApplicationFlow.cancel')}</button>
         </div>
 
         <input
           type="text"
           className="form-input"
-          placeholder="Search by university, city, or program..."
+          placeholder={t('student.newApplicationFlow.searchPlaceholder')}
           value={term}
           onChange={(e) => setTerm(e.target.value)}
         />
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
           <input type="checkbox" checked={privateOnly} onChange={(e) => setPrivateOnly(e.target.checked)} />
-          Private universities only
+          {t('student.newApplicationFlow.privateOnly')}
         </label>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '400px', overflowY: 'auto' }}>
           {results.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>No universities match your search.</p>
+            <p style={{ color: 'var(--text-muted)' }}>{t('student.newApplicationFlow.noMatches')}</p>
           ) : (
             results.map((uni) => (
               <button
                 key={uni.id}
                 onClick={() => setSelectedUniversity(uni)}
-                style={{ textAlign: 'left', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer' }}
+                style={{ textAlign: locale === 'ar' ? 'right' : 'left', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer' }}
               >
                 <strong style={{ color: 'var(--secondary)' }}>{uni.name}</strong>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>{uni.city} · {uni.type}</div>
@@ -100,35 +102,35 @@ export default function NewApplicationFlow({ uid, onCreated, onCancel }) {
     <div className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h2 style={{ color: 'var(--secondary)', fontSize: '1.3rem' }}>{selectedUniversity.name}</h2>
-        <button onClick={() => setSelectedUniversity(null)} className="btn-secondary" style={{ padding: '8px 16px' }}>Change University</button>
+        <button onClick={() => setSelectedUniversity(null)} className="btn-secondary" style={{ padding: '8px 16px' }}>{t('student.newApplicationFlow.changeUniversity')}</button>
       </div>
 
       <form onSubmit={handleCreate}>
         <div className="form-group mb-8">
-          <label className="form-label">Application Level *</label>
+          <label className="form-label">{t('student.newApplicationFlow.applicationLevel')}</label>
           <select className="form-select" value={level} onChange={(e) => setLevel(e.target.value)} required>
-            {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+            {LEVELS.map((l) => <option key={l} value={l}>{t(`levelOptions.${l}`)}</option>)}
           </select>
         </div>
 
         <div className="form-group mb-8">
-          <label className="form-label">Program *</label>
+          <label className="form-label">{t('student.newApplicationFlow.program')}</label>
           <select className="form-select" value={programName} onChange={(e) => setProgramName(e.target.value)} required>
-            <option value="">Select a program</option>
+            <option value="">{t('student.newApplicationFlow.selectProgram')}</option>
             {selectedUniversity.programs.map((p) => <option key={p} value={p}>{p}</option>)}
-            <option value="__other__">Other / not listed</option>
+            <option value="__other__">{t('student.newApplicationFlow.otherNotListed')}</option>
           </select>
         </div>
 
         {programName === '__other__' && (
           <div className="form-group mb-8">
-            <label className="form-label">Program Name *</label>
-            <input type="text" className="form-input" value={customProgram} onChange={(e) => setCustomProgram(e.target.value)} placeholder="e.g. Computer Engineering" required />
+            <label className="form-label">{t('student.newApplicationFlow.programName')}</label>
+            <input type="text" className="form-input" value={customProgram} onChange={(e) => setCustomProgram(e.target.value)} placeholder={t('student.newApplicationFlow.programNamePlaceholder')} required />
           </div>
         )}
 
         <button type="submit" className="btn-primary" disabled={creating} style={{ width: '100%', fontSize: '1.1rem', padding: '14px' }}>
-          {creating ? 'Starting Application...' : 'Start Application'}
+          {creating ? t('student.newApplicationFlow.startingApplication') : t('student.newApplicationFlow.startApplication')}
         </button>
       </form>
     </div>

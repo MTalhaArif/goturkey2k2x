@@ -3,22 +3,25 @@ import Head from 'next/head';
 import { destinations } from '@/lib/destinations';
 import { travelBlogPosts } from '@/lib/travelBlog';
 import Reveal from '@/components/Reveal';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const DestinationsMap = dynamic(() => import('@/components/DestinationsMap'), { ssr: false });
 
 export default function Tourism() {
+  const { t } = useTranslation();
+
   return (
     <>
       <Head>
-        <title>Tourism in Türkiye | GoTurkey 2k2x</title>
-        <meta name="description" content="Discover Türkiye's top destinations, culture and travel stories while you plan your studies abroad." />
+        <title>{t('tourism.metaTitle')}</title>
+        <meta name="description" content={t('tourism.metaDescription')} />
       </Head>
 
       <div className="section section-bg">
         <div className="container">
           <Reveal className="section-header">
-            <h2>Discover Türkiye</h2>
-            <p>Beyond your studies, Türkiye offers centuries of history, stunning coastlines, and unforgettable culture. Here&apos;s a taste of what&apos;s waiting for you.</p>
+            <h2>{t('tourism.title')}</h2>
+            <p>{t('tourism.subtitle')}</p>
           </Reveal>
 
           {/* MAP */}
@@ -28,7 +31,7 @@ export default function Tourism() {
 
           {/* DESTINATIONS */}
           <div className="section-header" style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '2rem' }}>Top Destinations</h2>
+            <h2 style={{ fontSize: '2rem' }}>{t('tourism.topDestinations')}</h2>
           </div>
           <div className="grid-3" style={{ marginBottom: '5rem' }}>
             {destinations.map((dest, i) => (
@@ -44,8 +47,8 @@ export default function Tourism() {
 
           {/* BLOG */}
           <div className="section-header" style={{ marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '2rem' }}>Travel & Culture Stories</h2>
-            <p>A few reads to get you excited about life in Türkiye.</p>
+            <h2 style={{ fontSize: '2rem' }}>{t('tourism.storiesTitle')}</h2>
+            <p>{t('tourism.storiesSubtitle')}</p>
           </div>
           <div className="grid-3">
             {travelBlogPosts.map((post, i) => (
@@ -60,9 +63,9 @@ export default function Tourism() {
 
           <div className="text-center mt-4" style={{ marginTop: '3rem' }}>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-              Destination and travel content courtesy of the official Go Türkiye tourism board.
+              {t('tourism.attribution')}
             </p>
-            <a href="https://goturkiye.com/" target="_blank" rel="noreferrer" className="btn-secondary">Explore More on GoTürkiye.com</a>
+            <a href="https://goturkiye.com/" target="_blank" rel="noreferrer" className="btn-secondary">{t('tourism.exploreMore')}</a>
           </div>
         </div>
       </div>

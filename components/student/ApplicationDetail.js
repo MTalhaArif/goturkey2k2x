@@ -2,35 +2,37 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { uploadFile } from '@/lib/uploadFile';
-import { STAGES, STAGE_LABELS } from '@/lib/applicationStages';
+import { STAGES } from '@/lib/applicationStages';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const PIPELINE_STAGES = STAGES.filter((s) => s !== 'rejected');
 
 const DOCUMENT_SLOTS = [
-  { key: 'picture', label: 'White Background Picture', accept: '.jpg,.jpeg,.png', path: 'documents/photos' },
-  { key: 'passport', label: 'Passport', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/passports' },
-  { key: 'highSchool1', label: 'High School Certificate', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/high_school' },
-  { key: 'highSchool2', label: 'High School Transcript', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/high_school' },
-  { key: 'cv', label: 'CV / Resume', accept: '.pdf,.doc,.docx', path: 'documents/cvs' },
+  { key: 'picture', accept: '.jpg,.jpeg,.png', path: 'documents/photos' },
+  { key: 'passport', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/passports' },
+  { key: 'highSchool1', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/high_school' },
+  { key: 'highSchool2', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/high_school' },
+  { key: 'cv', accept: '.pdf,.doc,.docx', path: 'documents/cvs' },
 ];
 
 const BACHELOR_SLOTS = [
-  { key: 'bachelorDegree', label: "Bachelor's Degree", accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/bachelor' },
-  { key: 'bachelorTranscript', label: "Bachelor's Transcript", accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/bachelor' },
+  { key: 'bachelorDegree', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/bachelor' },
+  { key: 'bachelorTranscript', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/bachelor' },
 ];
 
 const MASTER_SLOTS = [
-  { key: 'masterDegree', label: "Master's Degree", accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/master' },
-  { key: 'masterTranscript', label: "Master's Transcript", accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/master' },
+  { key: 'masterDegree', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/master' },
+  { key: 'masterTranscript', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/master' },
 ];
 
 const OPTIONAL_SLOTS = [
-  { key: 'languageProficiency', label: 'Language Proficiency Certificate', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/language' },
-  { key: 'recommendationLetter', label: 'Recommendation Letter', accept: '.pdf,.jpg,.jpeg,.png,.doc,.docx', path: 'documents/rec_letters' },
-  { key: 'other', label: 'Other Document', accept: '.pdf,.jpg,.jpeg,.png,.doc,.docx', path: 'documents/other' },
+  { key: 'languageProficiency', accept: '.pdf,.jpg,.jpeg,.png', path: 'documents/language' },
+  { key: 'recommendationLetter', accept: '.pdf,.jpg,.jpeg,.png,.doc,.docx', path: 'documents/rec_letters' },
+  { key: 'other', accept: '.pdf,.jpg,.jpeg,.png,.doc,.docx', path: 'documents/other' },
 ];
 
 export default function ApplicationDetail({ application, onBack }) {
+  const { t } = useTranslation();
   const [files, setFiles] = useState({});
   const [googleDriveLink, setGoogleDriveLink] = useState(application.googleDriveLink || '');
   const [uploading, setUploading] = useState(false);
@@ -55,7 +57,7 @@ export default function ApplicationDetail({ application, onBack }) {
         if (files[slot.key]) {
           const url = await uploadFile(files[slot.key], slot.path);
           uploadedDocs[slot.key] = url;
-          if (!url) failedLabels.push(slot.label);
+          if (!url) failedLabels.push(t(`documentLabels.${slot.key}`));
         }
       }
 
@@ -72,7 +74,7 @@ export default function ApplicationDetail({ application, onBack }) {
       return { failedLabels };
     } catch (error) {
       console.error('Error saving documents:', error);
-      alert('There was an error saving your documents. Please try again.');
+      alert(t('student.applicationDetail.errorSavingDocs'));
       return { failedLabels: [], hadError: true };
     } finally {
       setUploading(false);
@@ -84,9 +86,9 @@ export default function ApplicationDetail({ application, onBack }) {
     saveDocuments(null).then((result) => {
       if (!result || result.hadError) return;
       if (result.failedLabels.length > 0) {
-        alert(`Draft saved, but these files could not be uploaded: ${result.failedLabels.join(', ')}. Please paste a Google Drive link above as a fallback, or try again shortly.`);
+        alert(t('student.applicationDetail.draftSavedWithFailures', { files: result.failedLabels.join(', ') }));
       } else {
-        alert('Draft saved successfully! You can return later to complete it.');
+        alert(t('student.applicationDetail.draftSaved'));
       }
     });
   };
@@ -97,29 +99,29 @@ export default function ApplicationDetail({ application, onBack }) {
       window.scrollTo(0, 0);
       if (!result || result.hadError) return;
       if (result.failedLabels.length > 0) {
-        alert(`Application submitted, but these files could not be uploaded: ${result.failedLabels.join(', ')}. Please paste a Google Drive link above as a fallback, or try again shortly.`);
+        alert(t('student.applicationDetail.submittedWithFailures', { files: result.failedLabels.join(', ') }));
       }
     });
   };
 
   const handleUploadSlip = async (e) => {
     e.preventDefault();
-    if (!slipFile) return alert('Please select a file first.');
+    if (!slipFile) return alert(t('student.applicationDetail.selectFileFirst'));
     setUploading(true);
     try {
       const url = await uploadFile(slipFile, 'documents/payments');
       if (!url) {
-        alert('The payment proof file could not be uploaded. Please try again shortly, or contact us directly with the receipt.');
+        alert(t('student.applicationDetail.slipUploadFailed'));
         return;
       }
       const appRef = doc(db, 'applications', application.id);
       const updates = { paymentSlipUrl: url, stage: 'payment_pending', updatedAt: new Date().toISOString() };
       await updateDoc(appRef, updates);
       setSlipFile(null);
-      alert('Payment proof uploaded successfully!');
+      alert(t('student.applicationDetail.slipUploadSuccess'));
     } catch (err) {
       console.error(err);
-      alert('Error uploading payment slip.');
+      alert(t('student.applicationDetail.slipUploadError'));
     } finally {
       setUploading(false);
     }
@@ -129,7 +131,7 @@ export default function ApplicationDetail({ application, onBack }) {
 
   return (
     <div>
-      <button onClick={onBack} className="btn-secondary" style={{ marginBottom: '1.5rem', padding: '8px 16px' }}>← Back to Applications</button>
+      <button onClick={onBack} className="btn-secondary" style={{ marginBottom: '1.5rem', padding: '8px 16px' }}>{t('student.applicationDetail.back')}</button>
 
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <h2 style={{ color: 'var(--secondary)', marginBottom: '0.25rem' }}>{application.universityName}</h2>
@@ -137,7 +139,7 @@ export default function ApplicationDetail({ application, onBack }) {
 
         {application.stage === 'rejected' ? (
           <div style={{ padding: '1rem', background: '#fee2e2', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
-            <strong style={{ color: '#b91c1c' }}>This application was not successful.</strong>
+            <strong style={{ color: '#b91c1c' }}>{t('student.applicationDetail.rejected')}</strong>
           </div>
         ) : (
           <div style={{ display: 'flex', overflowX: 'auto', gap: '0' }}>
@@ -152,7 +154,7 @@ export default function ApplicationDetail({ application, onBack }) {
                   {i + 1}
                 </div>
                 <div style={{ fontSize: '0.7rem', color: i <= currentIndex ? 'var(--secondary)' : 'var(--text-muted)', fontWeight: i === currentIndex ? 700 : 400 }}>
-                  {STAGE_LABELS[stage]}
+                  {t(`stages.${stage}`)}
                 </div>
                 {i < PIPELINE_STAGES.length - 1 && (
                   <div style={{ position: 'absolute', top: '14px', left: '50%', width: '100%', height: '2px', background: i < currentIndex ? 'var(--primary)' : 'rgba(0,0,0,0.08)', zIndex: -1 }} />
@@ -164,40 +166,40 @@ export default function ApplicationDetail({ application, onBack }) {
       </div>
 
       <div className="card" style={{ marginBottom: '1.5rem', background: '#f8fafc' }}>
-        <h3 style={{ color: 'var(--secondary)', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Updates from Administration</h3>
+        <h3 style={{ color: 'var(--secondary)', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.applicationDetail.updatesTitle')}</h3>
         {application.adminNotes ? (
           <div style={{ padding: '1rem', background: 'rgba(255, 215, 0, 0.1)', borderRadius: '8px', borderLeft: '4px solid var(--accent)' }}>
-            <p><strong>Message from Admission Office:</strong></p>
+            <p><strong>{t('student.applicationDetail.adminMessageLabel')}</strong></p>
             <p style={{ marginTop: '0.5rem', whiteSpace: 'pre-wrap' }}>{application.adminNotes}</p>
           </div>
         ) : (
-          <p style={{ color: 'var(--text-muted)' }}>No new messages from administration.</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t('student.applicationDetail.noMessages')}</p>
         )}
 
         {application.offerLetterUrl && (
           <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
-            <p><strong>🎉 Congratulations! Your Offer Letter is ready.</strong></p>
-            <a href={application.offerLetterUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ marginTop: '0.5rem', display: 'inline-block' }}>Download Offer Letter</a>
+            <p><strong>{t('student.applicationDetail.offerReady')}</strong></p>
+            <a href={application.offerLetterUrl} target="_blank" rel="noreferrer" className="btn-primary" style={{ marginTop: '0.5rem', display: 'inline-block' }}>{t('student.applicationDetail.downloadOffer')}</a>
           </div>
         )}
       </div>
 
       {application.offerLetterUrl && (
         <div className="card" style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ color: 'var(--secondary)', marginBottom: '1rem' }}>Submit Proof of Payment</h3>
+          <h3 style={{ color: 'var(--secondary)', marginBottom: '1rem' }}>{t('student.applicationDetail.paymentTitle')}</h3>
           {application.paymentSlipUrl ? (
             <div style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
-              <p>✅ You have successfully submitted your proof of payment.</p>
-              <a href={application.paymentSlipUrl} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: '0.5rem', fontSize: '0.9rem', color: '#3b82f6', fontWeight: 'bold' }}>View Submitted Slip</a>
+              <p>{t('student.applicationDetail.paymentSubmitted')}</p>
+              <a href={application.paymentSlipUrl} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: '0.5rem', fontSize: '0.9rem', color: '#3b82f6', fontWeight: 'bold' }}>{t('student.applicationDetail.viewSlip')}</a>
             </div>
           ) : (
             <form onSubmit={handleUploadSlip}>
-              <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>Please upload the bank receipt or proof of payment for your university deposit to secure your seat.</p>
+              <p style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>{t('student.applicationDetail.paymentInstructions')}</p>
               <div className="form-group">
                 <input type="file" className="form-input" onChange={(e) => setSlipFile(e.target.files[0])} accept=".pdf,.jpg,.jpeg,.png" required />
               </div>
               <button type="submit" className="btn-primary" disabled={uploading}>
-                {uploading ? 'Uploading...' : 'Submit Payment Proof'}
+                {uploading ? t('student.applicationDetail.uploading') : t('student.applicationDetail.submitPayment')}
               </button>
             </form>
           )}
@@ -205,11 +207,11 @@ export default function ApplicationDetail({ application, onBack }) {
       )}
 
       <div className="card">
-        <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Document Checklist</h3>
-        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>If file uploads fail due to server issues, please paste a Google Drive folder link containing all your documents below.</p>
+        <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.applicationDetail.checklistTitle')}</h3>
+        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('student.applicationDetail.checklistNote')}</p>
 
         <div className="form-group mb-8">
-          <label className="form-label">Google Drive Folder Link (Alternative)</label>
+          <label className="form-label">{t('student.applicationDetail.driveLink')}</label>
           <input type="url" className="form-input" value={googleDriveLink} onChange={(e) => setGoogleDriveLink(e.target.value)} placeholder="https://drive.google.com/..." />
         </div>
 
@@ -217,21 +219,21 @@ export default function ApplicationDetail({ application, onBack }) {
           {requiredSlots.map((slot) => (
             <div className="form-group" key={slot.key}>
               <label className="form-label">
-                {slot.label}
-                {application.documents?.[slot.key] && <span style={{ color: '#10b981', marginLeft: '0.5rem', fontSize: '0.8rem' }}>✓ Uploaded</span>}
+                {t(`documentLabels.${slot.key}`)}
+                {application.documents?.[slot.key] && <span style={{ color: '#10b981', marginInlineStart: '0.5rem', fontSize: '0.8rem' }}>{t('student.applicationDetail.uploaded')}</span>}
               </label>
               <input type="file" className="form-input" name={slot.key} onChange={handleFileChange} accept={slot.accept} />
             </div>
           ))}
         </div>
 
-        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Optional Documents</h3>
+        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.applicationDetail.optionalDocs')}</h3>
         <div className="grid-3" style={{ gridTemplateColumns: '1fr', gap: '1rem' }}>
           {OPTIONAL_SLOTS.map((slot) => (
             <div className="form-group" key={slot.key}>
               <label className="form-label">
-                {slot.label} (Optional)
-                {application.documents?.[slot.key] && <span style={{ color: '#10b981', marginLeft: '0.5rem', fontSize: '0.8rem' }}>✓ Uploaded</span>}
+                {t(`documentLabels.${slot.key}`)} {t('student.applicationDetail.optionalSuffix')}
+                {application.documents?.[slot.key] && <span style={{ color: '#10b981', marginInlineStart: '0.5rem', fontSize: '0.8rem' }}>{t('student.applicationDetail.uploaded')}</span>}
               </label>
               <input type="file" className="form-input" name={slot.key} onChange={handleFileChange} accept={slot.accept} />
             </div>
@@ -240,10 +242,10 @@ export default function ApplicationDetail({ application, onBack }) {
 
         <div className="mt-4 text-center form-btn-row" style={{ display: 'flex', gap: '1rem' }}>
           <button type="button" onClick={handleSaveDraft} className="btn-secondary" disabled={uploading} style={{ flex: 1, fontSize: '1.1rem', padding: '14px', background: 'transparent', border: '2px solid var(--primary)', color: 'var(--primary)' }}>
-            {uploading ? 'Saving...' : 'Save as Draft'}
+            {uploading ? t('student.applicationDetail.saving') : t('student.applicationDetail.saveDraft')}
           </button>
           <button type="button" onClick={handleSubmit} className="btn-primary" disabled={uploading} style={{ flex: 2, fontSize: '1.2rem', padding: '14px' }}>
-            {uploading ? 'Uploading Documents & Submitting...' : 'Submit Application'}
+            {uploading ? t('student.applicationDetail.uploadingSubmitting') : t('student.applicationDetail.submitApplication')}
           </button>
         </div>
       </div>

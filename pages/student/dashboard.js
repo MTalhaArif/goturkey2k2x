@@ -8,12 +8,14 @@ import ProfileCompletionGate from '@/components/student/ProfileCompletionGate';
 import ApplicationsList from '@/components/student/ApplicationsList';
 import NewApplicationFlow from '@/components/student/NewApplicationFlow';
 import ApplicationDetail from '@/components/student/ApplicationDetail';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const isProfileComplete = (profile) =>
   Boolean(profile?.dob && profile?.nationality && profile?.motherName && profile?.phone);
 
 export default function StudentDashboard() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user, profile, loading } = useAuth();
 
   const [applications, setApplications] = useState([]);
@@ -51,7 +53,7 @@ export default function StudentDashboard() {
   }, [user]);
 
   if (loading || (user && applicationsLoading)) {
-    return <div style={{ textAlign: 'center', padding: '4rem' }}>Loading Dashboard...</div>;
+    return <div style={{ textAlign: 'center', padding: '4rem' }}>{t('student.dashboard.loading')}</div>;
   }
   if (!user) return null;
 
@@ -60,13 +62,13 @@ export default function StudentDashboard() {
   return (
     <>
       <Head>
-        <title>Student Dashboard | GoTurkey 2k2x</title>
+        <title>{t('student.dashboard.metaTitle')}</title>
       </Head>
 
       <div className="section section-bg" style={{ minHeight: '80vh', borderRadius: '12px' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ color: 'var(--secondary)' }}>Welcome, {profile?.firstName || 'Student'}!</h1>
+            <h1 style={{ color: 'var(--secondary)' }}>{t('student.dashboard.welcome', { name: profile?.firstName || t('student.dashboard.fallbackName') })}</h1>
           </div>
 
           {!isProfileComplete(profile) ? (
@@ -91,7 +93,7 @@ export default function StudentDashboard() {
               onBack={() => setView('list')}
             />
           ) : view === 'detail' ? (
-            <div style={{ textAlign: 'center', padding: '4rem' }}>Loading application...</div>
+            <div style={{ textAlign: 'center', padding: '4rem' }}>{t('student.dashboard.loadingApplication')}</div>
           ) : (
             <ApplicationsList
               applications={applications}

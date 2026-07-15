@@ -1,20 +1,23 @@
-import { STAGE_LABELS, STAGE_COLORS } from '@/lib/applicationStages';
+import { STAGE_COLORS } from '@/lib/applicationStages';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function ApplicationsList({ applications, onSelect, onStartNew, onEditProfile }) {
+  const { t } = useTranslation();
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-        <h2 style={{ color: 'var(--secondary)', fontSize: '1.4rem' }}>Your Applications</h2>
+        <h2 style={{ color: 'var(--secondary)', fontSize: '1.4rem' }}>{t('student.applicationsList.title')}</h2>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <button onClick={onEditProfile} className="btn-secondary" style={{ padding: '10px 18px' }}>Edit Profile</button>
-          <button onClick={onStartNew} className="btn-primary" style={{ padding: '10px 18px' }}>+ Start New Application</button>
+          <button onClick={onEditProfile} className="btn-secondary" style={{ padding: '10px 18px' }}>{t('student.applicationsList.editProfile')}</button>
+          <button onClick={onStartNew} className="btn-primary" style={{ padding: '10px 18px' }}>{t('student.applicationsList.startNew')}</button>
         </div>
       </div>
 
       {applications.length === 0 ? (
         <div className="card text-center">
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>You haven&apos;t started an application yet.</p>
-          <button onClick={onStartNew} className="btn-primary">Start Your First Application</button>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>{t('student.applicationsList.emptyState')}</p>
+          <button onClick={onStartNew} className="btn-primary">{t('student.applicationsList.startFirst')}</button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -31,9 +34,9 @@ export default function ApplicationsList({ applications, onSelect, onStartNew, o
                   border: `1px solid ${STAGE_COLORS[app.stage] || '#64748b'}`,
                   background: 'rgba(0,0,0,0.03)',
                 }}>
-                  {STAGE_LABELS[app.stage] || app.stage}
+                  {t(`stages.${app.stage}`)}
                 </span>
-                <button onClick={() => onSelect(app.id)} className="btn-secondary" style={{ padding: '8px 16px' }}>View</button>
+                <button onClick={() => onSelect(app.id)} className="btn-secondary" style={{ padding: '8px 16px' }}>{t('student.applicationsList.view')}</button>
               </div>
             </div>
           ))}

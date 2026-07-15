@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { countries } from '@/lib/countries';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const DOCUMENTATION_OPTIONS = ['Residence Permit (İkamet)', 'Notarized Rental Contract', 'Health Insurance', 'Tax Number', 'Address Registration', 'Nüfus Registration'];
 const ACCOMMODATION_OPTIONS = ['Shared Room', 'Private Room', 'Studio Apartment', 'Apartment'];
@@ -24,6 +25,7 @@ function initialFormData(profile) {
 }
 
 export default function ProfileCompletionGate({ profile, uid, onSaved, allowCancel, onCancel }) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState(() => initialFormData(profile));
   const [saving, setSaving] = useState(false);
 
@@ -47,7 +49,7 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
       onSaved();
     } catch (error) {
       console.error('Error saving profile:', error);
-      alert('There was an error saving your profile. Please try again.');
+      alert(t('student.profileGate.errorSaving'));
     } finally {
       setSaving(false);
     }
@@ -56,43 +58,43 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
   return (
     <div className="card">
       <div style={{ background: '#fef3c7', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #f59e0b', marginBottom: '2rem' }}>
-        <h3 style={{ color: '#d97706', marginBottom: '0.5rem' }}>Complete Your Profile</h3>
-        <p style={{ fontSize: '0.9rem' }}>These details are shared across all your university applications.</p>
+        <h3 style={{ color: '#d97706', marginBottom: '0.5rem' }}>{t('student.profileGate.completeTitle')}</h3>
+        <p style={{ fontSize: '0.9rem' }}>{t('student.profileGate.completeSubtitle')}</p>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Personal Information</h3>
+        <h3 style={{ marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.profileGate.personalInfo')}</h3>
         <div className="responsive-2col" style={{ gap: '1rem' }}>
           <div className="form-group">
-            <label className="form-label">Date of Birth *</label>
+            <label className="form-label">{t('student.profileGate.dob')}</label>
             <input type="date" className="form-input" name="dob" value={formData.dob} onChange={handleInputChange} required />
           </div>
           <div className="form-group">
-            <label className="form-label">Nationality *</label>
+            <label className="form-label">{t('student.profileGate.nationality')}</label>
             <select className="form-select" name="nationality" value={formData.nationality} onChange={handleInputChange} required>
-              <option value="">Select a country</option>
+              <option value="">{t('student.profileGate.selectCountry')}</option>
               {countries.map((country) => (
                 <option key={country} value={country}>{country}</option>
               ))}
             </select>
           </div>
           <div className="form-group">
-            <label className="form-label">Mother&apos;s Name *</label>
+            <label className="form-label">{t('student.profileGate.motherName')}</label>
             <input type="text" className="form-input" name="motherName" value={formData.motherName} onChange={handleInputChange} required />
           </div>
           <div className="form-group">
-            <label className="form-label">Mobile Phone *</label>
+            <label className="form-label">{t('student.profileGate.phone')}</label>
             <input type="tel" className="form-input" name="phone" value={formData.phone} onChange={handleInputChange} required />
           </div>
         </div>
 
         <div className="form-group mb-8" style={{ marginTop: '1rem' }}>
-          <label className="form-label">Reference</label>
-          <input type="text" className="form-input" name="reference" value={formData.reference} onChange={handleInputChange} placeholder="Agent name, friend, or how you heard about us (optional)" />
+          <label className="form-label">{t('student.profileGate.reference')}</label>
+          <input type="text" className="form-input" name="reference" value={formData.reference} onChange={handleInputChange} placeholder={t('student.profileGate.referencePlaceholder')} />
         </div>
 
-        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Documentation Services (Optional)</h3>
-        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Do you need assistance with any of the following documentation services? (Select all that apply.)</p>
+        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.profileGate.docServicesTitle')}</h3>
+        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('student.profileGate.docServicesSubtitle')}</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem' }}>
           {DOCUMENTATION_OPTIONS.map((option) => (
             <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
@@ -101,7 +103,7 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
                 checked={formData.documentationServices.includes(option)}
                 onChange={() => handleCheckboxToggle('documentationServices', option)}
               />
-              {option}
+              {t(`documentationOptions.${option}`)}
             </label>
           ))}
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
@@ -110,7 +112,7 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
               checked={formData.documentationServices.includes('Other')}
               onChange={() => handleCheckboxToggle('documentationServices', 'Other')}
             />
-            Other:
+            {t('student.profileGate.other')}
           </label>
           {formData.documentationServices.includes('Other') && (
             <input
@@ -119,14 +121,14 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
               name="documentationOther"
               value={formData.documentationOther}
               onChange={handleInputChange}
-              placeholder="Please specify"
+              placeholder={t('student.profileGate.otherPlaceholder')}
               style={{ maxWidth: '400px' }}
             />
           )}
         </div>
 
-        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>Accommodation Services (Optional)</h3>
-        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>What type of accommodation are you looking for?</p>
+        <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.profileGate.accommodationTitle')}</h3>
+        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('student.profileGate.accommodationSubtitle')}</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem' }}>
           {ACCOMMODATION_OPTIONS.map((option) => (
             <label key={option} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.95rem', cursor: 'pointer' }}>
@@ -135,7 +137,7 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
                 checked={formData.accommodationTypes.includes(option)}
                 onChange={() => handleCheckboxToggle('accommodationTypes', option)}
               />
-              {option}
+              {t(`accommodationOptions.${option}`)}
             </label>
           ))}
         </div>
@@ -143,11 +145,11 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
         <div className="mt-4 text-center form-btn-row" style={{ display: 'flex', gap: '1rem' }}>
           {allowCancel && (
             <button type="button" onClick={onCancel} className="btn-secondary" style={{ flex: 1, fontSize: '1.1rem', padding: '14px', background: 'transparent', border: '2px solid var(--secondary)', color: 'var(--secondary)' }}>
-              Cancel
+              {t('student.profileGate.cancel')}
             </button>
           )}
           <button type="submit" className="btn-primary" disabled={saving} style={{ flex: allowCancel ? 2 : 1, fontSize: '1.2rem', padding: '14px' }}>
-            {saving ? 'Saving...' : 'Save Profile'}
+            {saving ? t('student.profileGate.saving') : t('student.profileGate.saveProfile')}
           </button>
         </div>
       </form>

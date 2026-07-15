@@ -2,30 +2,33 @@ import Head from "next/head";
 import Link from "next/link";
 import StudyFinder from "@/components/StudyFinder";
 import Reveal from "@/components/Reveal";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   const students = [
-    { name: "Ekrem Zajmi", faculty: "Faculty of Political Sciences", country: "KOSOVO", quote: "Studying in Türkiye has been a transformative experience. The academic environment is world-class, and the Turkish people are incredibly welcoming." },
-    { name: "Meriem Amrane", faculty: "Faculty of Engineering", country: "ALGERIA", quote: "The quality of education here is outstanding. My professors are highly knowledgeable and the facilities are modern." },
-    { name: "Soo Yeon Park", faculty: "Faculty of Languages History and Geography", country: "KOREA", quote: "Türkiye is a perfect blend of East and West. As a language student, immersing myself in Turkish culture while studying has been invaluable." }
+    { key: 'student1', quote: t('home.student1Quote'), faculty: t('home.student1Faculty'), country: t('home.student1Country'), name: "Ekrem Zajmi" },
+    { key: 'student2', quote: t('home.student2Quote'), faculty: t('home.student2Faculty'), country: t('home.student2Country'), name: "Meriem Amrane" },
+    { key: 'student3', quote: t('home.student3Quote'), faculty: t('home.student3Faculty'), country: t('home.student3Country'), name: "Soo Yeon Park" },
   ];
 
   return (
     <>
       <Head>
-        <title>GoTurkey 2k2x | Your Gateway to a Better Tomorrow</title>
-        <meta name="description" content="Study in Turkey with guaranteed acceptance. Bachelors and Masters programs in top public and private universities." />
+        <title>{t('home.metaTitle')}</title>
+        <meta name="description" content={t('home.metaDescription')} />
       </Head>
 
       {/* HERO SECTION */}
       <section className="hero">
         <div className="hero-slides-wrap" style={{ background: "linear-gradient(135deg, rgba(15, 26, 60, 0.8) 0%, rgba(227, 28, 37, 0.6) 100%), url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
           <div className="hero-content" style={{ margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", color: "white" }}>
-            <h1 style={{ color: "white" }}>September 2026 Intake is Open!</h1>
-            <p style={{ fontWeight: 500, color: "white" }}>High-Quality Higher Education Opportunities in Worldwide Known Universities</p>
+            <h1 style={{ color: "white" }}>{t('home.heroTitle')}</h1>
+            <p style={{ fontWeight: 500, color: "white" }}>{t('home.heroSubtitle')}</p>
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center" }}>
-              <Link href="/register" className="btn-primary" style={{ backgroundColor: "var(--accent)", color: "var(--text-main)" }}>Apply Now</Link>
-              <Link href="/universities" className="btn-secondary" style={{ color: "white", borderColor: "white" }}>Explore Universities</Link>
+              <Link href="/register" className="btn-primary" style={{ backgroundColor: "var(--accent)", color: "var(--text-main)" }}>{t('home.applyNow')}</Link>
+              <Link href="/universities" className="btn-secondary" style={{ color: "white", borderColor: "white" }}>{t('home.exploreUniversities')}</Link>
             </div>
           </div>
         </div>
@@ -37,15 +40,15 @@ export default function Home() {
       <section className="section section-bg">
         <div className="container">
           <Reveal className="section-header">
-            <h2>Why Choose Türkiye & GoTurkey 2k2x?</h2>
-            <p>We provide a seamless transition to your dream education in Turkey.</p>
+            <h2>{t('home.whyTitle')}</h2>
+            <p>{t('home.whySubtitle')}</p>
           </Reveal>
           <div className="grid-4">
             {[
-              { icon: "🌉", title: "Bridge to the World", desc: "Sitting at the crossroads of two continents, Europe and Asia, it offers a diverse cultural experience like no other." },
-              { icon: "🎓", title: "Quality Education", desc: "Learn at 21st-century technological campuses and choose from nearly 45,000 degree programs globally recognized." },
-              { icon: "✅", title: "Guaranteed Acceptance", desc: "We secure your university acceptance within 15 days through our extensive partner network." },
-              { icon: "🤝", title: "Post-Landing Services", desc: "Airport pickup, accommodation, SIM card, transport card, residency, and bank account setup." },
+              { icon: "🌉", title: t('home.why1Title'), desc: t('home.why1Desc') },
+              { icon: "🎓", title: t('home.why2Title'), desc: t('home.why2Desc') },
+              { icon: "✅", title: t('home.why3Title'), desc: t('home.why3Desc') },
+              { icon: "🤝", title: t('home.why4Title'), desc: t('home.why4Desc') },
             ].map((item, i) => (
               <Reveal key={item.title} delay={i * 90}>
                 <div className="card text-center">
@@ -64,47 +67,47 @@ export default function Home() {
         <div className="container">
           <div className="responsive-2col" style={{ gap: "4rem", alignItems: "center" }}>
             <Reveal>
-              <div style={{ background: "var(--primary)", display: "inline-block", padding: "6px 12px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "1rem", letterSpacing: "1px" }}>BATCH 1 - 2026 • STARTING SOON</div>
-              <h2 style={{ fontSize: "3rem", marginBottom: "1rem", lineHeight: "1.1" }}>1 Month of<br/><span style={{ color: "var(--accent)" }}>Turkish Learning</span></h2>
-              <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "rgba(255,255,255,0.8)" }}>Are you coming to Türkiye on a Study Visa or for a Visit? Your journey starts with a word! Learn the language to feel like a local on your first day.</p>
-              
+              <div style={{ background: "var(--primary)", display: "inline-block", padding: "6px 12px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "bold", marginBottom: "1rem", letterSpacing: "1px" }}>{t('home.courseBadge')}</div>
+              <h2 style={{ fontSize: "3rem", marginBottom: "1rem", lineHeight: "1.1" }}>{t('home.courseTitleLine1')}<br/><span style={{ color: "var(--accent)" }}>{t('home.courseTitleLine2')}</span></h2>
+              <p style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "rgba(255,255,255,0.8)" }}>{t('home.courseDesc')}</p>
+
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem", marginBottom: "2rem", background: "rgba(255,255,255,0.1)", padding: "1rem", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)" }}>
                 <div>
-                  <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", display: "block" }}>100 USD</span>
-                  <span style={{ fontSize: "2.5rem", fontWeight: "bold", color: "var(--accent)", lineHeight: "1" }}>35 USD</span>
+                  <span style={{ textDecoration: "line-through", color: "rgba(255,255,255,0.5)", fontSize: "1.2rem", display: "block" }}>{t('home.priceOld')}</span>
+                  <span style={{ fontSize: "2.5rem", fontWeight: "bold", color: "var(--accent)", lineHeight: "1" }}>{t('home.priceNew')}</span>
                 </div>
                 <div style={{ borderLeft: "2px solid rgba(255,255,255,0.2)", paddingLeft: "1.5rem" }}>
-                  <h4 style={{ color: "var(--accent)", fontSize: "1.1rem", marginBottom: "0.2rem" }}>Best Price Guarantee</h4>
-                  <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.7)", margin: 0 }}>Quality learning at the best value.</p>
+                  <h4 style={{ color: "var(--accent)", fontSize: "1.1rem", marginBottom: "0.2rem" }}>{t('home.priceGuarantee')}</h4>
+                  <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.7)", margin: 0 }}>{t('home.priceDesc')}</p>
                 </div>
               </div>
 
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                  <a href="https://whatsapp.com/channel/0029VbDH6rm0wajxEpZrUB0b" target="_blank" rel="noreferrer" className="btn-primary" style={{ display: "flex", alignItems: "center", gap: "8px", background: "#25D366" }}>
-                    WhatsApp Us
+                    {t('home.whatsappUs')}
                  </a>
                  <a href="https://www.instagram.com/goturkey2k2x" target="_blank" rel="noreferrer" className="btn-secondary" style={{ display: "flex", alignItems: "center", gap: "8px", color: "white", borderColor: "rgba(255,255,255,0.3)" }}>
-                    DM on Instagram
+                    {t('home.dmInstagram')}
                  </a>
               </div>
             </Reveal>
 
             <Reveal delay={150} className="responsive-2col" style={{ gap: "1rem" }}>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
-                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>📹 Online Classes on Zoom</h4>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Learn from anywhere, anytime with interactive sessions.</p>
+                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>{t('home.course1Title')}</h4>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{t('home.course1Desc')}</p>
               </div>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
-                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>🗓️ Weekend Classes</h4>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Flexible and convenient schedule for students and workers.</p>
+                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>{t('home.course2Title')}</h4>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{t('home.course2Desc')}</p>
               </div>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
-                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>🎓 Expert Native Teachers</h4>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Speak with confidence and understand with ease.</p>
+                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>{t('home.course3Title')}</h4>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{t('home.course3Desc')}</p>
               </div>
               <div style={{ background: "white", color: "var(--secondary)", padding: "1.5rem", borderRadius: "12px" }}>
-                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>📜 Certificate of Completion</h4>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Add value to your future with official certification.</p>
+                <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>{t('home.course4Title')}</h4>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{t('home.course4Desc')}</p>
               </div>
             </Reveal>
           </div>
@@ -115,16 +118,16 @@ export default function Home() {
       <section className="section" style={{ background: "#f8fafc" }}>
         <div className="container">
           <Reveal className="section-header">
-            <h2>APPLY IN 5 STEPS</h2>
-            <p>Your journey to studying in Türkiye is simple and straightforward.</p>
+            <h2>{t('home.stepsTitle')}</h2>
+            <p>{t('home.stepsSubtitle')}</p>
           </Reveal>
           <div className="grid-3">
             {[
-              { num: 1, title: "Explore Programs", desc: "Use our tools to find the perfect university and degree program." },
-              { num: 2, title: "Prepare Documents", desc: "Gather your diploma, transcripts, passport, CV, and photos." },
-              { num: 3, title: "Submit Application", desc: "Fill out our quick registration form online." },
-              { num: 4, title: "Get Acceptance", desc: "Receive your acceptance letter within 15 days." },
-              { num: 5, title: "Visa & Travel", desc: "Apply for your student visa and let us handle your post-landing needs." }
+              { num: 1, title: t('home.step1Title'), desc: t('home.step1Desc') },
+              { num: 2, title: t('home.step2Title'), desc: t('home.step2Desc') },
+              { num: 3, title: t('home.step3Title'), desc: t('home.step3Desc') },
+              { num: 4, title: t('home.step4Title'), desc: t('home.step4Desc') },
+              { num: 5, title: t('home.step5Title'), desc: t('home.step5Desc') },
             ].map((step, i) => (
               <Reveal key={step.num} delay={(i % 3) * 90}>
                 <div className="card" style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
@@ -144,12 +147,12 @@ export default function Home() {
       <section className="section section-bg">
         <div className="container">
           <Reveal className="section-header">
-            <h2>What Our Students Say</h2>
-            <p>Read about the experiences of international students currently studying in Türkiye.</p>
+            <h2>{t('home.studentsTitle')}</h2>
+            <p>{t('home.studentsSubtitle')}</p>
           </Reveal>
           <div className="grid-3">
             {students.map((s, i) => (
-              <Reveal key={s.name} delay={i * 100}>
+              <Reveal key={s.key} delay={i * 100}>
                 <div className="card" style={{ position: "relative", paddingTop: "2.5rem" }}>
                   <div style={{ position: "absolute", top: "10px", left: "20px", fontSize: "4rem", color: "var(--primary)", opacity: 0.1, fontFamily: "serif", lineHeight: 1 }}>&quot;</div>
                   <p style={{ fontStyle: "italic", color: "var(--text-muted)", marginBottom: "1.5rem" }}>{s.quote}</p>
@@ -168,13 +171,13 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* CTA SECTION */}
       <section className="section text-center" style={{ background: "linear-gradient(135deg, var(--primary) 0%, #a01010 60%, var(--secondary) 100%)", color: "white" }}>
         <Reveal as="div" className="container">
-          <h2 style={{ color: "white", marginBottom: "1rem" }}>Ready to Start Your Journey?</h2>
-          <p className="mb-8" style={{ color: "rgba(255,255,255,0.8)", fontSize: "1.1rem" }}>Join thousands of students who have trusted us with their future.</p>
-          <Link href="/register" className="btn-primary" style={{ fontSize: "1.1rem", padding: "12px 32px", background: "white", color: "var(--primary) !important" }}>Start Your Application</Link>
+          <h2 style={{ color: "white", marginBottom: "1rem" }}>{t('home.ctaTitle')}</h2>
+          <p className="mb-8" style={{ color: "rgba(255,255,255,0.8)", fontSize: "1.1rem" }}>{t('home.ctaSubtitle')}</p>
+          <Link href="/register" className="btn-primary" style={{ fontSize: "1.1rem", padding: "12px 32px", background: "white", color: "var(--primary) !important" }}>{t('home.ctaButton')}</Link>
         </Reveal>
       </section>
     </>

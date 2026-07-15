@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useTranslation } from '@/lib/i18n/useTranslation';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   // Decide if admin or student based on path
   const isAdmin = router.pathname.startsWith('/admin');
@@ -22,15 +25,16 @@ export default function DashboardLayout({ children }) {
             <span style={{ color: 'var(--primary)' }}>GoTurkey</span>2k2x
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.4)' }}>|</span>
-          <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{isAdmin ? 'Admin Portal' : 'Student Portal'}</span>
+          <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{isAdmin ? t('dashboardLayout.adminPortal') : t('dashboardLayout.studentPortal')}</span>
         </div>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <LanguageSwitcher />
           <button onClick={handleLogout} style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
-            Logout
+            {t('dashboardLayout.logout')}
           </button>
         </div>
       </header>
-      
+
       <main style={{ flex: 1, padding: '2rem' }}>
         {children}
       </main>
