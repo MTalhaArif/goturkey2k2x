@@ -13,6 +13,7 @@ class MyDocument extends Document {
     return (
       <Html lang={locale} dir={dir}>
         <Head>
+          <meta name="google-site-verification" content="y5L8x5GV5Jmvn2f5wZ0mjuh8lG7mYp2Pv_5jE7hyUq8" />
           <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#0F1A3C" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
