@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Head from 'next/head';
 import { auth, db } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Seo from '@/components/Seo';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function Register() {
@@ -72,9 +72,7 @@ export default function Register() {
 
   return (
     <>
-      <Head>
-        <title>{t('register.metaTitle')}</title>
-      </Head>
+      <Seo title={t('register.metaTitle')} description={t('register.metaDescription')} path="/register" />
       <div className="section section-bg" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
         <div className="container" style={{ maxWidth: '500px' }}>
           <div style={{ background: 'white', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>

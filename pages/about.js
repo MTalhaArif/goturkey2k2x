@@ -1,5 +1,5 @@
-import Head from "next/head";
 import Reveal from "@/components/Reveal";
+import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function About() {
@@ -7,9 +7,7 @@ export default function About() {
 
   return (
     <>
-      <Head>
-        <title>{t('about.metaTitle')}</title>
-      </Head>
+      <Seo title={t('about.metaTitle')} description={t('about.metaDescription')} path="/about" />
 
       <section className="section section-bg" style={{ minHeight: "80vh" }}>
         <div className="container" style={{ maxWidth: "1000px" }}>

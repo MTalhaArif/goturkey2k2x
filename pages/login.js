@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { auth, db } from '@/lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import Seo from '@/components/Seo';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function Login() {
@@ -37,9 +37,7 @@ export default function Login() {
 
   return (
     <>
-      <Head>
-        <title>{t('login.metaTitle')}</title>
-      </Head>
+      <Seo title={t('login.metaTitle')} description={t('login.metaDescription')} path="/login" />
       <div className="section section-bg" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center' }}>
         <div className="container" style={{ maxWidth: '400px' }}>
           <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>

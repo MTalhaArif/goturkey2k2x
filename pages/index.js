@@ -1,7 +1,7 @@
-import Head from "next/head";
 import Link from "next/link";
 import StudyFinder from "@/components/StudyFinder";
 import Reveal from "@/components/Reveal";
+import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function Home() {
@@ -15,10 +15,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>{t('home.metaTitle')}</title>
-        <meta name="description" content={t('home.metaDescription')} />
-      </Head>
+      <Seo title={t('home.metaTitle')} description={t('home.metaDescription')} path="/" />
 
       {/* HERO SECTION */}
       <section className="hero">

@@ -94,7 +94,15 @@ export default function AdminDashboard() {
   };
 
   if (loading || (user && profile?.role === 'admin' && dataLoading)) {
-    return <div style={{ textAlign: 'center', padding: '4rem' }}>{t('admin.dashboard.loading')}</div>;
+    return (
+      <>
+        <Head>
+          <title>{t('admin.dashboard.metaTitle')}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <div style={{ textAlign: 'center', padding: '4rem' }}>{t('admin.dashboard.loading')}</div>
+      </>
+    );
   }
   if (!user || profile?.role !== 'admin') return null;
 
@@ -102,6 +110,7 @@ export default function AdminDashboard() {
     <>
       <Head>
         <title>{t('admin.dashboard.metaTitle')}</title>
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
       <div style={{ padding: '0', minHeight: '100vh' }}>
         <div className="container" style={{ maxWidth: '1400px', padding: '0' }}>

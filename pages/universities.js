@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import Head from "next/head";
 import { universities } from "@/lib/universities";
 import { filterUniversities } from "@/lib/universityFilters";
 import Reveal from "@/components/Reveal";
+import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function Universities() {
@@ -17,9 +17,7 @@ export default function Universities() {
 
   return (
     <>
-      <Head>
-        <title>{t('universities.metaTitle')}</title>
-      </Head>
+      <Seo title={t('universities.metaTitle')} description={t('universities.metaDescription')} path="/universities" />
 
       <div className="section section-bg">
         <div className="container">

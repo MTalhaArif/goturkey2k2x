@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /student/
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://goturkey2k2x.com/sitemap.xml

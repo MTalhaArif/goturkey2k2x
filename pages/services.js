@@ -1,5 +1,5 @@
-import Head from "next/head";
 import Reveal from "@/components/Reveal";
+import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function Services() {
@@ -18,9 +18,7 @@ export default function Services() {
 
   return (
     <>
-      <Head>
-        <title>{t('services.metaTitle')}</title>
-      </Head>
+      <Seo title={t('services.metaTitle')} description={t('services.metaDescription')} path="/services" />
       <div className="section section-bg">
         <div className="container">
           <Reveal className="section-header">

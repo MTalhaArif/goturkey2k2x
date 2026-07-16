@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { destinations } from '@/lib/destinations';
 import { travelBlogPosts } from '@/lib/travelBlog';
 import Reveal from '@/components/Reveal';
+import Seo from '@/components/Seo';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const DestinationsMap = dynamic(() => import('@/components/DestinationsMap'), { ssr: false });
@@ -12,10 +12,7 @@ export default function Tourism() {
 
   return (
     <>
-      <Head>
-        <title>{t('tourism.metaTitle')}</title>
-        <meta name="description" content={t('tourism.metaDescription')} />
-      </Head>
+      <Seo title={t('tourism.metaTitle')} description={t('tourism.metaDescription')} path="/tourism" />
 
       <div className="section section-bg">
         <div className="container">

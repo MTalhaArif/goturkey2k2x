@@ -53,7 +53,15 @@ export default function StudentDashboard() {
   }, [user]);
 
   if (loading || (user && applicationsLoading)) {
-    return <div style={{ textAlign: 'center', padding: '4rem' }}>{t('student.dashboard.loading')}</div>;
+    return (
+      <>
+        <Head>
+          <title>{t('student.dashboard.metaTitle')}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <div style={{ textAlign: 'center', padding: '4rem' }}>{t('student.dashboard.loading')}</div>
+      </>
+    );
   }
   if (!user) return null;
 
@@ -63,6 +71,7 @@ export default function StudentDashboard() {
     <>
       <Head>
         <title>{t('student.dashboard.metaTitle')}</title>
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       <div className="section section-bg" style={{ minHeight: '80vh', borderRadius: '12px' }}>
