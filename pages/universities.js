@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { universities } from "@/lib/universities";
 import { filterUniversities } from "@/lib/universityFilters";
 import Reveal from "@/components/Reveal";
@@ -74,6 +75,9 @@ export default function Universities() {
             )}
           </div>
 
+          <p className="text-center mt-4" style={{ color: 'var(--text-muted)' }}>
+            {t('universities.ctaLead')} <Link href="/services" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('universities.ctaServicesLink')}</Link>
+          </p>
         </div>
       </div>
     </>

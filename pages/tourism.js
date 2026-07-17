@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { destinations } from '@/lib/destinations';
 import { travelBlogPosts } from '@/lib/travelBlog';
 import Reveal from '@/components/Reveal';
@@ -66,6 +67,17 @@ export default function Tourism() {
           </div>
         </div>
       </div>
+
+      <section className="section text-center" style={{ background: 'linear-gradient(135deg, var(--primary) 0%, #a01010 60%, var(--secondary) 100%)', color: 'white' }}>
+        <div className="container">
+          <h2 style={{ color: 'white', marginBottom: '1rem' }}>{t('tourism.ctaTitle')}</h2>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem' }}>{t('tourism.ctaSubtitle')}</p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/universities" className="btn-primary" style={{ background: 'white', color: 'var(--primary)' }}>{t('tourism.ctaBrowseUniversities')}</Link>
+            <Link href="/register" className="btn-secondary" style={{ color: 'white', borderColor: 'white' }}>{t('tourism.ctaApplyNow')}</Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

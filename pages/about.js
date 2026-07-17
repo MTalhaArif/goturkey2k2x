@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -62,6 +63,10 @@ export default function About() {
               </div>
             </Reveal>
           </div>
+
+          <p className="text-center mt-4" style={{ color: 'var(--text-muted)' }}>
+            {t('about.ctaLead')} <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('about.ctaRegisterLink')}</Link>
+          </p>
         </div>
       </section>
     </>

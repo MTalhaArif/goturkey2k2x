@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -35,6 +36,10 @@ export default function Services() {
               </Reveal>
             ))}
           </div>
+
+          <p className="text-center mt-4" style={{ color: 'var(--text-muted)' }}>
+            {t('services.ctaLead')} <Link href="/universities" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('services.ctaUniversitiesLink')}</Link> {t('services.ctaOr')} <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('services.ctaRegisterLink')}</Link>
+          </p>
         </div>
       </div>
     </>
