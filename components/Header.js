@@ -81,6 +81,9 @@ export default function Header() {
             <div className="nav-item">
               <Link href="/tourism" className="nav-link-btn" onClick={closeMenu}>{t('header.tourism')}</Link>
             </div>
+            <div className="nav-item">
+              <Link href="/partners" className="nav-link-btn" onClick={closeMenu}>{t('header.partners')}</Link>
+            </div>
             {user ? (
               <Link href={dashboardHref} className="nav-link-btn nav-tryos" onClick={closeMenu}>{t('header.dashboard')}</Link>
             ) : (
