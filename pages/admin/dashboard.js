@@ -180,7 +180,11 @@ export default function AdminDashboard() {
                               <div className="admin-action-row" style={{ display: 'flex', gap: '2rem' }}>
                                 <div style={{ flex: 1 }}>
                                   <h4 style={{ marginBottom: '1rem', color: 'var(--secondary)' }}>{t('admin.dashboard.applicationDetails')}</h4>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.program')}</strong> {app.programName || t('admin.dashboard.notAvailable')} ({app.level || t('admin.dashboard.notAvailable')})</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.university')}</strong> {app.universityName || t('admin.dashboard.notAvailable')}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.applicationDate')}</strong> {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.dob')}</strong> {studentProfile.dob || t('admin.dashboard.notAvailable')} | <strong>{t('admin.dashboard.phone')}</strong> {studentProfile.phone || t('admin.dashboard.notAvailable')}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.motherName')}</strong> {studentProfile.motherName || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.reference')}</strong> {studentProfile.reference || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                                     <strong>{t('admin.dashboard.documentationServices')}</strong> {(studentProfile.documentationServices || []).map((s) => (s === 'Other' ? (studentProfile.documentationOther || t('student.profileGate.other')) : t(`documentationOptions.${s}`))).join(', ') || t('admin.dashboard.noneRequested')}

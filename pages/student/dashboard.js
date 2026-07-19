@@ -100,6 +100,8 @@ export default function StudentDashboard() {
             <ApplicationDetail
               application={selectedApplication}
               onBack={() => setView('list')}
+              studentName={[profile?.firstName, profile?.lastName].filter(Boolean).join(' ')}
+              studentEmail={user?.email}
             />
           ) : view === 'detail' ? (
             <div style={{ textAlign: 'center', padding: '4rem' }}>{t('student.dashboard.loadingApplication')}</div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { uploadFile } from '@/lib/uploadFile';
+import { notifyAdminOfSubmission } from '@/lib/notifyAdmin';
 import { STAGES } from '@/lib/applicationStages';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
@@ -31,7 +32,7 @@ const OPTIONAL_SLOTS = [
   { key: 'other', accept: '.pdf,.jpg,.jpeg,.png,.doc,.docx', path: 'documents/other' },
 ];
 
-export default function ApplicationDetail({ application, onBack }) {
+export default function ApplicationDetail({ application, onBack, studentName, studentEmail }) {
   const { t } = useTranslation();
   const [files, setFiles] = useState({});
   const [googleDriveLink, setGoogleDriveLink] = useState(application.googleDriveLink || '');
@@ -98,6 +99,7 @@ export default function ApplicationDetail({ application, onBack }) {
     saveDocuments('submitted').then((result) => {
       window.scrollTo(0, 0);
       if (!result || result.hadError) return;
+      notifyAdminOfSubmission({ application, studentName, studentEmail });
       if (result.failedLabels.length > 0) {
         alert(t('student.applicationDetail.submittedWithFailures', { files: result.failedLabels.join(', ') }));
       }
