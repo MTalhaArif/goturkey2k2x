@@ -33,6 +33,7 @@ export default function Footer() {
               <li><Link href="/services">› {t('footer.services')}</Link></li>
               <li><Link href="/tourism">› {t('footer.tourism')}</Link></li>
               <li><Link href="/register">› {t('footer.applyNow')}</Link></li>
+              <li><Link href="/partners">› {t('footer.becomePartner')}</Link></li>
             </ul>
           </div>
 

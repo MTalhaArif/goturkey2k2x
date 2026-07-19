@@ -1,6 +1,6 @@
 import { SITE_DOMAIN, SITE_LOCALES, localePrefix } from '@/lib/seo';
 
-const PUBLIC_PATHS = ['/', '/about', '/services', '/universities', '/tourism', '/register', '/login'];
+const PUBLIC_PATHS = ['/', '/about', '/services', '/universities', '/tourism', '/register', '/login', '/partners'];
 
 function buildSitemap() {
   const urlEntries = PUBLIC_PATHS.map((path) => {
