@@ -51,6 +51,7 @@ export default function Partners() {
           <div className="hero-content" style={{ margin: 'auto', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: 'white' }}>
             <h1 style={{ color: 'white' }}>{t('partners.heroTitle')}</h1>
             <p style={{ fontWeight: 500, color: 'white', maxWidth: '600px', textAlign: 'center' }}>{t('partners.heroSubtitle')}</p>
+            <a href="#partner-form" className="btn-primary" style={{ backgroundColor: 'var(--accent)', color: 'var(--text-main)' }}>{t('partners.heroCta')}</a>
           </div>
         </div>
       </section>
@@ -69,7 +70,7 @@ export default function Partners() {
             ))}
           </div>
 
-          <Reveal style={{ maxWidth: '500px', margin: '0 auto' }}>
+          <Reveal id="partner-form" style={{ maxWidth: '500px', margin: '0 auto', scrollMarginTop: '2rem' }}>
             <div style={{ background: 'white', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
               {submitted ? (
                 <div className="text-center">

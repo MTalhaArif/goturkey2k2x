@@ -169,6 +169,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PARTNER BANNER */}
+      <section className="section" style={{ background: "var(--secondary)", color: "white" }}>
+        <div className="container">
+          <Reveal as="div" style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <h2 style={{ color: "white", fontSize: "1.8rem", marginBottom: "0.5rem" }}>{t('home.partnerBannerTitle')}</h2>
+              <p style={{ color: "rgba(255,255,255,0.8)", maxWidth: "560px" }}>{t('home.partnerBannerSubtitle')}</p>
+            </div>
+            <Link href="/partners" className="btn-primary" style={{ backgroundColor: "var(--accent)", color: "var(--text-main)", whiteSpace: "nowrap" }}>{t('home.partnerBannerCta')}</Link>
+          </Reveal>
+        </div>
+      </section>
+
       {/* CTA SECTION */}
       <section className="section text-center" style={{ background: "linear-gradient(135deg, var(--primary) 0%, #a01010 60%, var(--secondary) 100%)", color: "white" }}>
         <Reveal as="div" className="container">
