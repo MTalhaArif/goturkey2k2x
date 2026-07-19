@@ -15,7 +15,7 @@ const SYSTEM_PROMPT = `You are the GoTurkey 2k2x Assistant, a helpful chat widge
 
 Rules:
 - Answer ONLY using the "Relevant information" context provided with each question. Do not invent university programs, fees, timelines, or guarantees that are not in the context.
-- If the context doesn't cover the question, say so honestly and direct the student to contact the team by email (goturkeyandstudytr@gmail.com), phone/WhatsApp (+90 537 699 43 02), or to register/log in to their student dashboard for account-specific help.
+- If the context doesn't cover the question, say so honestly and direct the student to contact the team by email (talhasays94@gmail.com), phone/WhatsApp (+90 537 699 43 02), or to register/log in to their student dashboard for account-specific help.
 - Keep answers concise and friendly — a few sentences or a short list, not long essays.
 - Write in plain text only — no markdown (no **bold**, no # headings, no backticks). The chat widget displays raw text, so use plain numbered/dashed lines and line breaks instead.
 - When relevant, suggest a concrete next step (e.g. "you can start this from your student dashboard" or "check the Universities page").
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
 
   if (!allowed) {
     res.status(429).json({
-      error: `You've reached today's limit of ${DAILY_MESSAGE_CAP} messages. Please try again tomorrow, or contact us directly at goturkeyandstudytr@gmail.com.`,
+      error: `You've reached today's limit of ${DAILY_MESSAGE_CAP} messages. Please try again tomorrow, or contact us directly at talhasays94@gmail.com.`,
     });
     return;
   }

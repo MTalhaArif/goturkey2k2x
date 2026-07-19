@@ -27,8 +27,8 @@ export default function Header() {
       <div className="top-bar">
         <div className="container">
           <div className="top-contact">
-            <a href="mailto:goturkeyandstudytr@gmail.com">
-              ✉ goturkeyandstudytr@gmail.com
+            <a href="mailto:talhasays94@gmail.com">
+              ✉ talhasays94@gmail.com
             </a>
             <a href="tel:+905376994302">
               📞 +90 537 699 43 02

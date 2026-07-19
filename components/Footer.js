@@ -20,7 +20,7 @@ export default function Footer() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 18 }}>
               <a href="tel:+905376994302" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>📞 +90 537 699 43 02</a>
-              <a href="mailto:goturkeyandstudytr@gmail.com" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>✉ goturkeyandstudytr@gmail.com</a>
+              <a href="mailto:talhasays94@gmail.com" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>✉ talhasays94@gmail.com</a>
             </div>
           </div>
 

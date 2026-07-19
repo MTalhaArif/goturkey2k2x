@@ -11,7 +11,7 @@ const ORGANIZATION_JSON_LD = {
   logo: `${SITE_DOMAIN}/icon-512.png`,
   description:
     'GoTurkey 2k2x is an educational consultancy connecting international students with guaranteed acceptance at top Turkish universities, plus comprehensive post-landing services.',
-  email: 'goturkeyandstudytr@gmail.com',
+  email: 'talhasays94@gmail.com',
   telephone: '+905376994302',
   sameAs: [
     'https://www.instagram.com/goturkey2k2x',
