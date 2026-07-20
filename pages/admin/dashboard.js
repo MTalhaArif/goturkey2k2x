@@ -24,6 +24,7 @@ export default function AdminDashboard() {
   const [stageAction, setStageAction] = useState('documents_pending');
   const [processingId, setProcessingId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [zippingId, setZippingId] = useState(null);
 
   useEffect(() => {
     if (!loading && (!user || profile?.role !== 'admin')) {
@@ -119,6 +120,47 @@ export default function AdminDashboard() {
       lines.push(`- ${t('admin.dashboard.googleDrive')} ${app.googleDriveLink}`);
     }
     return lines.join('\n');
+  };
+
+  const handleDownloadZip = async (app, studentProfile) => {
+    const files = Object.entries(app.documents || {})
+      .filter(([, url]) => url)
+      .map(([key, url]) => ({ label: t(`documentLabels.${key}`), url }));
+    if (app.paymentSlipUrl) files.push({ label: t('admin.dashboard.paymentSlipLabel'), url: app.paymentSlipUrl });
+    if (app.offerLetterUrl) files.push({ label: t('admin.dashboard.offerLetterLabel'), url: app.offerLetterUrl });
+
+    if (files.length === 0) {
+      alert(t('admin.dashboard.zipEmpty'));
+      return;
+    }
+
+    const studentName = [studentProfile.firstName, studentProfile.lastName].filter(Boolean).join(' ') || 'Student';
+    setZippingId(app.id);
+    try {
+      const response = await fetch('/api/admin/zip-documents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentName, files }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || 'Zip request failed');
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${studentName.replace(/[/\\:*?"<>|]/g, '')}_Documents.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading document zip:', err);
+      alert(t('admin.dashboard.zipError'));
+    } finally {
+      setZippingId(null);
+    }
   };
 
   const handleCopy = async (app, studentProfile) => {
@@ -244,14 +286,25 @@ export default function AdminDashboard() {
                                     ))}
                                   </div>
 
-                                  <button
-                                    type="button"
-                                    onClick={() => handleCopy(app, studentProfile)}
-                                    className="btn-secondary"
-                                    style={{ marginTop: '1.5rem', width: '100%' }}
-                                  >
-                                    {copiedId === app.id ? t('admin.dashboard.copied') : t('admin.dashboard.copyForPortal')}
-                                  </button>
+                                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDownloadZip(app, studentProfile)}
+                                      disabled={zippingId === app.id}
+                                      className="btn-primary"
+                                      style={{ flex: 1 }}
+                                    >
+                                      {zippingId === app.id ? t('admin.dashboard.zipping') : t('admin.dashboard.downloadZip')}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleCopy(app, studentProfile)}
+                                      className="btn-secondary"
+                                      style={{ flex: 1 }}
+                                    >
+                                      {copiedId === app.id ? t('admin.dashboard.copied') : t('admin.dashboard.copyForPortal')}
+                                    </button>
+                                  </div>
                                 </div>
 
                                 <div style={{ flex: 1, background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
