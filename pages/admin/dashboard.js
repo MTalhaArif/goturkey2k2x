@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [offerFile, setOfferFile] = useState(null);
   const [stageAction, setStageAction] = useState('documents_pending');
   const [processingId, setProcessingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   useEffect(() => {
     if (!loading && (!user || profile?.role !== 'admin')) {
@@ -90,6 +91,44 @@ export default function AdminDashboard() {
       alert(t('admin.dashboard.alertError'));
     } finally {
       setProcessingId(null);
+    }
+  };
+
+  const buildPartnerPortalText = (app, studentProfile) => {
+    const lines = [
+      `${t('admin.dashboard.studentInfoLabel')}: ${studentProfile.firstName || ''} ${studentProfile.lastName || ''}`.trim(),
+      `${t('login.email')}: ${studentProfile.email || t('admin.dashboard.notAvailable')}`,
+      `${t('student.profileGate.nationality').replace(' *', '')}: ${studentProfile.nationality || t('admin.dashboard.notAvailable')}`,
+      `${t('admin.dashboard.dob')} ${studentProfile.dob || t('admin.dashboard.notAvailable')}`,
+      `${t('admin.dashboard.phone')} ${studentProfile.phone || t('admin.dashboard.notAvailable')}`,
+      `${t('admin.dashboard.motherName')} ${studentProfile.motherName || t('admin.dashboard.notAvailable')}`,
+      '',
+      `${t('admin.dashboard.university')} ${app.universityName || t('admin.dashboard.notAvailable')}`,
+      `${t('admin.dashboard.program')} ${app.programName || t('admin.dashboard.notAvailable')} (${app.level || t('admin.dashboard.notAvailable')})`,
+      `${t('admin.dashboard.applicationDate')} ${app.createdAt ? new Date(app.createdAt).toLocaleDateString() : t('admin.dashboard.notAvailable')}`,
+      '',
+      `${t('admin.dashboard.studentDocuments')}`,
+    ];
+    const docs = Object.entries(app.documents || {}).filter(([, url]) => url);
+    if (docs.length === 0) {
+      lines.push(`- ${t('admin.dashboard.notUploaded')}`);
+    } else {
+      docs.forEach(([key, url]) => lines.push(`- ${t(`documentLabels.${key}`)}: ${url}`));
+    }
+    if (app.googleDriveLink) {
+      lines.push(`- ${t('admin.dashboard.googleDrive')} ${app.googleDriveLink}`);
+    }
+    return lines.join('\n');
+  };
+
+  const handleCopy = async (app, studentProfile) => {
+    try {
+      await navigator.clipboard.writeText(buildPartnerPortalText(app, studentProfile));
+      setCopiedId(app.id);
+      setTimeout(() => setCopiedId((id) => (id === app.id ? null : id)), 2000);
+    } catch (err) {
+      console.error('Error copying to clipboard:', err);
+      alert(t('admin.dashboard.copyError'));
     }
   };
 
@@ -204,6 +243,15 @@ export default function AdminDashboard() {
                                       <a key={key} href={url} target="_blank" rel="noreferrer" style={{ fontSize: '0.8rem', padding: '4px 8px', background: 'var(--secondary)', color: 'white', borderRadius: '4px' }}>{t(`documentLabels.${key}`)}</a>
                                     ))}
                                   </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCopy(app, studentProfile)}
+                                    className="btn-secondary"
+                                    style={{ marginTop: '1.5rem', width: '100%' }}
+                                  >
+                                    {copiedId === app.id ? t('admin.dashboard.copied') : t('admin.dashboard.copyForPortal')}
+                                  </button>
                                 </div>
 
                                 <div style={{ flex: 1, background: 'white', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)' }}>

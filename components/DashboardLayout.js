@@ -26,6 +26,22 @@ export default function DashboardLayout({ children }) {
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.4)' }}>|</span>
           <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{isAdmin ? t('dashboardLayout.adminPortal') : t('dashboardLayout.studentPortal')}</span>
+          {isAdmin && (
+            <nav style={{ display: 'flex', gap: '1rem', marginInlineStart: '0.5rem' }}>
+              <Link
+                href="/admin/dashboard"
+                style={{ color: 'white', fontSize: '0.9rem', opacity: router.pathname === '/admin/dashboard' ? 1 : 0.65, fontWeight: router.pathname === '/admin/dashboard' ? 700 : 400 }}
+              >
+                {t('dashboardLayout.applications')}
+              </Link>
+              <Link
+                href="/admin/partners"
+                style={{ color: 'white', fontSize: '0.9rem', opacity: router.pathname === '/admin/partners' ? 1 : 0.65, fontWeight: router.pathname === '/admin/partners' ? 700 : 400 }}
+              >
+                {t('dashboardLayout.partnerLeads')}
+              </Link>
+            </nav>
+          )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <LanguageSwitcher />
