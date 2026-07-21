@@ -103,6 +103,7 @@ export default function AdminDashboard() {
       `${t('admin.dashboard.dob')} ${studentProfile.dob || t('admin.dashboard.notAvailable')}`,
       `${t('admin.dashboard.phone')} ${studentProfile.phone || t('admin.dashboard.notAvailable')}`,
       `${t('admin.dashboard.motherName')} ${studentProfile.motherName || t('admin.dashboard.notAvailable')}`,
+      `${t('admin.dashboard.fatherName')} ${studentProfile.fatherName || t('admin.dashboard.notAvailable')}`,
       '',
       `${t('admin.dashboard.university')} ${app.universityName || t('admin.dashboard.notAvailable')}`,
       `${t('admin.dashboard.program')} ${app.programName || t('admin.dashboard.notAvailable')} (${app.level || t('admin.dashboard.notAvailable')})`,
@@ -266,6 +267,7 @@ export default function AdminDashboard() {
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.applicationDate')}</strong> {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.dob')}</strong> {studentProfile.dob || t('admin.dashboard.notAvailable')} | <strong>{t('admin.dashboard.phone')}</strong> {studentProfile.phone || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.motherName')}</strong> {studentProfile.motherName || t('admin.dashboard.notAvailable')}</p>
+                                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.fatherName')}</strong> {studentProfile.fatherName || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{t('admin.dashboard.reference')}</strong> {studentProfile.reference || t('admin.dashboard.notAvailable')}</p>
                                   <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                                     <strong>{t('admin.dashboard.documentationServices')}</strong> {(studentProfile.documentationServices || []).map((s) => (s === 'Other' ? (studentProfile.documentationOther || t('student.profileGate.other')) : t(`documentationOptions.${s}`))).join(', ') || t('admin.dashboard.noneRequested')}

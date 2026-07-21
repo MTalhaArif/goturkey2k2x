@@ -11,7 +11,7 @@ import ApplicationDetail from '@/components/student/ApplicationDetail';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 const isProfileComplete = (profile) =>
-  Boolean(profile?.dob && profile?.nationality && profile?.motherName && profile?.phone);
+  Boolean(profile?.dob && profile?.nationality && profile?.motherName && profile?.fatherName && profile?.phone);
 
 export default function StudentDashboard() {
   const router = useRouter();

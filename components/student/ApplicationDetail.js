@@ -94,8 +94,20 @@ export default function ApplicationDetail({ application, onBack, studentName, st
     });
   };
 
+  const getMissingRequiredLabels = () =>
+    requiredSlots
+      .filter((slot) => !files[slot.key] && !application.documents?.[slot.key])
+      .map((slot) => t(`documentLabels.${slot.key}`));
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const missing = getMissingRequiredLabels();
+    if (missing.length > 0 && !googleDriveLink.trim()) {
+      alert(t('student.applicationDetail.missingRequiredDocs', { files: missing.join(', ') }));
+      return;
+    }
+
     saveDocuments('submitted').then((result) => {
       window.scrollTo(0, 0);
       if (!result || result.hadError) return;
@@ -218,15 +230,22 @@ export default function ApplicationDetail({ application, onBack, studentName, st
         </div>
 
         <div className="grid-3" style={{ gridTemplateColumns: '1fr', gap: '1rem' }}>
-          {requiredSlots.map((slot) => (
-            <div className="form-group" key={slot.key}>
-              <label className="form-label">
-                {t(`documentLabels.${slot.key}`)}
-                {application.documents?.[slot.key] && <span style={{ color: '#10b981', marginInlineStart: '0.5rem', fontSize: '0.8rem' }}>{t('student.applicationDetail.uploaded')}</span>}
-              </label>
-              <input type="file" className="form-input" name={slot.key} onChange={handleFileChange} accept={slot.accept} />
-            </div>
-          ))}
+          {requiredSlots.map((slot) => {
+            const isUploaded = Boolean(application.documents?.[slot.key] || files[slot.key]);
+            return (
+              <div className="form-group" key={slot.key}>
+                <label className="form-label">
+                  {t(`documentLabels.${slot.key}`)}
+                  {isUploaded ? (
+                    <span style={{ color: '#10b981', marginInlineStart: '0.5rem', fontSize: '0.8rem' }}>{t('student.applicationDetail.uploaded')}</span>
+                  ) : (
+                    <span style={{ color: '#ef4444', marginInlineStart: '0.5rem', fontSize: '0.8rem' }}>{t('student.applicationDetail.requiredBadge')}</span>
+                  )}
+                </label>
+                <input type="file" className="form-input" name={slot.key} onChange={handleFileChange} accept={slot.accept} />
+              </div>
+            );
+          })}
         </div>
 
         <h3 style={{ marginTop: '2rem', marginBottom: '1rem', borderBottom: '2px solid var(--border)', paddingBottom: '0.5rem' }}>{t('student.applicationDetail.optionalDocs')}</h3>

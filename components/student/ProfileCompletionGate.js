@@ -16,6 +16,7 @@ function initialFormData(profile) {
     dob: profile?.dob || '',
     nationality: profile?.nationality || '',
     motherName: profile?.motherName || '',
+    fatherName: profile?.fatherName || '',
     phone: profile?.phone || '',
     reference: profile?.reference || '',
     documentationServices: profile?.documentationServices || [],
@@ -81,6 +82,10 @@ export default function ProfileCompletionGate({ profile, uid, onSaved, allowCanc
           <div className="form-group">
             <label className="form-label">{t('student.profileGate.motherName')}</label>
             <input type="text" className="form-input" name="motherName" value={formData.motherName} onChange={handleInputChange} required />
+          </div>
+          <div className="form-group">
+            <label className="form-label">{t('student.profileGate.fatherName')}</label>
+            <input type="text" className="form-input" name="fatherName" value={formData.fatherName} onChange={handleInputChange} required />
           </div>
           <div className="form-group">
             <label className="form-label">{t('student.profileGate.phone')}</label>
