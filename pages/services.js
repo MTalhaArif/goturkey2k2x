@@ -23,7 +23,7 @@ export default function Services() {
       <div className="section section-bg">
         <div className="container">
           <Reveal className="section-header">
-            <h2>{t('services.title')}</h2>
+            <h1>{t('services.title')}</h1>
             <p>{t('services.subtitle')}</p>
           </Reveal>
           <div className="grid-4">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import StudyFinder from "@/components/StudyFinder";
 import Reveal from "@/components/Reveal";
 import Seo from "@/components/Seo";
@@ -19,7 +20,9 @@ export default function Home() {
 
       {/* HERO SECTION */}
       <section className="hero">
-        <div className="hero-slides-wrap" style={{ background: "linear-gradient(135deg, rgba(15, 26, 60, 0.8) 0%, rgba(227, 28, 37, 0.6) 100%), url('/hero.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+        <div className="hero-slides-wrap">
+          <Image src="/hero.png" alt={t('home.heroImageAlt')} fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(15, 26, 60, 0.8) 0%, rgba(227, 28, 37, 0.6) 100%)" }} />
           <div className="hero-content" style={{ margin: "auto", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", color: "white" }}>
             <h1 style={{ color: "white" }}>{t('home.heroTitle')}</h1>
             <p style={{ fontWeight: 500, color: "white" }}>{t('home.heroSubtitle')}</p>

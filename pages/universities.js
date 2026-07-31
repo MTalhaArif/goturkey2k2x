@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { universities } from "@/lib/universities";
 import { filterUniversities } from "@/lib/universityFilters";
+import { slugifyUniversityName } from "@/lib/universitySlug";
 import Reveal from "@/components/Reveal";
 import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -23,7 +24,7 @@ export default function Universities() {
       <div className="section section-bg">
         <div className="container">
           <Reveal className="section-header">
-            <h2>{t('universities.title')}</h2>
+            <h1>{t('universities.title')}</h1>
             <p>{t('universities.subtitle', { count: universities.length })}</p>
           </Reveal>
 
@@ -50,7 +51,9 @@ export default function Universities() {
                 <Reveal key={uni.id} delay={(i % 5) * 80}>
                   <div style={{ background: "white", padding: "2rem", borderRadius: "12px", boxShadow: "0 4px 15px rgba(0,0,0,0.05)", borderLeft: "4px solid var(--primary)" }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                      <h3 style={{ color: "var(--secondary)", fontSize: "1.5rem" }}>{uni.name}</h3>
+                      <h3 style={{ color: "var(--secondary)", fontSize: "1.5rem" }}>
+                        <Link href={`/universities/${slugifyUniversityName(uni.name)}`} style={{ color: 'inherit' }}>{uni.name}</Link>
+                      </h3>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--primary)", textTransform: "uppercase", letterSpacing: "0.5px" }}>{uni.city}</span>
                         <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>· {uni.type}</span>
@@ -69,6 +72,9 @@ export default function Universities() {
                         </span>
                       ))}
                     </div>
+                    <Link href={`/universities/${slugifyUniversityName(uni.name)}`} style={{ display: 'inline-block', marginTop: '1rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.9rem' }}>
+                      {t('universities.viewDetails')} →
+                    </Link>
                   </div>
                 </Reveal>
               ))

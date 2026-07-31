@@ -81,7 +81,7 @@ button { font-family: var(--font-body); }
 .section { padding: 100px 0; }
 .section-bg { background-color: white; }
 .section-header { text-align: center; margin-bottom: 60px; }
-.section-header h2 { font-size: 36px; color: var(--secondary); margin-bottom: 14px; }
+.section-header h1, .section-header h2 { font-size: 36px; color: var(--secondary); margin-bottom: 14px; }
 .section-header p { font-size: 17px; color: var(--text-muted); max-width: 640px; margin: 0 auto; }
 
 /* ─── GRIDS & CARDS ────────────────────────── */
@@ -154,7 +154,7 @@ button { font-family: var(--font-body); }
 @media (max-width: 768px) {
   .section { padding: 60px 0; }
   .section-header { margin-bottom: 36px; }
-  .section-header h2 { font-size: 26px; }
+  .section-header h1, .section-header h2 { font-size: 26px; }
   .hero-slides-wrap { height: auto; min-height: 460px; padding: 70px 0; }
   .hero-content h1 { font-size: 32px; letter-spacing: -0.5px; }
   .hero-content p { font-size: 16px; }

@@ -26,6 +26,11 @@ export default function ApplicationsList({ applications, onSelect, onStartNew, o
               <div>
                 <h3 style={{ color: 'var(--secondary)', fontSize: '1.1rem' }}>{app.universityName}</h3>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{app.programName} · {app.level}{app.universityType ? ` · ${app.universityType}` : ''}</p>
+                {app.createdAt && (
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                    {t('student.applicationsList.appliedOn', { date: new Date(app.createdAt).toLocaleDateString() })}
+                  </p>
+                )}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <span style={{

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { uploadFile } from '@/lib/uploadFile';
+import { compressFile } from '@/lib/compressFile';
 import { notifyAdminOfSubmission } from '@/lib/notifyAdmin';
 import { STAGES } from '@/lib/applicationStages';
 import { useTranslation } from '@/lib/i18n/useTranslation';
@@ -56,7 +57,8 @@ export default function ApplicationDetail({ application, onBack, studentName, st
       const failedLabels = [];
       for (const slot of [...requiredSlots, ...OPTIONAL_SLOTS]) {
         if (files[slot.key]) {
-          const url = await uploadFile(files[slot.key], slot.path);
+          const compressed = await compressFile(files[slot.key]);
+          const url = await uploadFile(compressed, slot.path);
           uploadedDocs[slot.key] = url;
           if (!url) failedLabels.push(t(`documentLabels.${slot.key}`));
         }
@@ -123,7 +125,8 @@ export default function ApplicationDetail({ application, onBack, studentName, st
     if (!slipFile) return alert(t('student.applicationDetail.selectFileFirst'));
     setUploading(true);
     try {
-      const url = await uploadFile(slipFile, 'documents/payments');
+      const compressed = await compressFile(slipFile);
+      const url = await uploadFile(compressed, 'documents/payments');
       if (!url) {
         alert(t('student.applicationDetail.slipUploadFailed'));
         return;
@@ -149,7 +152,10 @@ export default function ApplicationDetail({ application, onBack, studentName, st
 
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <h2 style={{ color: 'var(--secondary)', marginBottom: '0.25rem' }}>{application.universityName}</h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{application.programName} · {application.level}</p>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{application.programName} · {application.level}</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+          {application.createdAt ? t('student.applicationDetail.appliedOn', { date: new Date(application.createdAt).toLocaleDateString() }) : ' '}
+        </p>
 
         {application.stage === 'rejected' ? (
           <div style={{ padding: '1rem', background: '#fee2e2', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>

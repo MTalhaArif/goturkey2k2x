@@ -1,6 +1,13 @@
 import { SITE_DOMAIN, SITE_LOCALES, localePrefix } from '@/lib/seo';
+import { universities } from '@/lib/universities';
+import { slugifyUniversityName } from '@/lib/universitySlug';
+import { travelBlogPosts } from '@/lib/travelBlog';
 
-const PUBLIC_PATHS = ['/', '/about', '/services', '/universities', '/tourism', '/register', '/login', '/partners'];
+const PUBLIC_PATHS = [
+  '/', '/about', '/services', '/universities', '/tourism', '/blog', '/register', '/login', '/partners',
+  ...universities.map((u) => `/universities/${slugifyUniversityName(u.name)}`),
+  ...travelBlogPosts.map((p) => `/blog/${p.slug}`),
+];
 
 function buildSitemap() {
   const urlEntries = PUBLIC_PATHS.map((path) => {

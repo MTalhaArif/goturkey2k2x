@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "@/components/Reveal";
 import Seo from "@/components/Seo";
 import { useTranslation } from "@/lib/i18n/useTranslation";
@@ -13,7 +14,7 @@ export default function About() {
       <section className="section section-bg" style={{ minHeight: "80vh" }}>
         <div className="container" style={{ maxWidth: "1000px" }}>
           <Reveal className="section-header">
-            <h2>{t('about.title')}</h2>
+            <h1>{t('about.title')}</h1>
             <p>{t('about.subtitle')}</p>
           </Reveal>
 
@@ -31,8 +32,8 @@ export default function About() {
             {/* CEO Profile */}
             <Reveal>
               <div className="card text-center" style={{ borderTop: "4px solid var(--primary)" }}>
-                <div style={{ width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
-                  <img src="/talha.jpg" alt="Muhammad Talha Arif" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "relative", width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
+                  <Image src="/talha.jpg" alt="Muhammad Talha Arif, CEO of GoTurkey 2k2x" fill sizes="150px" style={{ objectFit: "cover" }} />
                 </div>
                 <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>Muhammad Talha Arif</h3>
                 <h4 style={{ color: "var(--primary)", fontSize: "1rem", marginBottom: "1rem" }}>{t('about.ceoTitle')}</h4>
@@ -49,8 +50,8 @@ export default function About() {
             {/* Creative Director Profile */}
             <Reveal delay={120}>
               <div className="card text-center" style={{ borderTop: "4px solid var(--accent)" }}>
-                <div style={{ width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
-                   <img src="https://ui-avatars.com/api/?name=Seemab+Kanwal&background=FFD700&color=0F1A3C&size=150" alt="Seemab Kanwal" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <div style={{ position: "relative", width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
+                  <Image src="https://ui-avatars.com/api/?name=Seemab+Kanwal&background=FFD700&color=0F1A3C&size=150" alt="Seemab Kanwal, Creative Director at GoTurkey 2k2x" fill sizes="150px" style={{ objectFit: "cover" }} />
                 </div>
                 <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>Seemab Kanwal</h3>
                 <h4 style={{ color: "var(--primary)", fontSize: "1rem", marginBottom: "1rem" }}>{t('about.creativeDirectorTitle')}</h4>
