@@ -34,6 +34,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* IBN KHALDUN UNIVERSITY SCHOLARSHIP BANNER */}
+      <section style={{ background: 'linear-gradient(135deg, var(--accent) 0%, #f0b90b 100%)', padding: '2.5rem 0' }}>
+        <div className="container text-center">
+          <h2 style={{ color: 'var(--secondary)', marginBottom: '0.5rem', fontSize: '1.6rem' }}>{t('home.scholarshipTitle')}</h2>
+          <p style={{ color: 'var(--secondary)', maxWidth: '700px', margin: '0 auto 1.5rem auto' }}>{t('home.scholarshipSubtitle')}</p>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLScjHdKdn4Fk-67f_viirCt_DKcAJ5cJxuT9iYc5UIpy9wP2Rw/viewform"
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary"
+          >
+            {t('home.scholarshipCta')}
+          </a>
+        </div>
+      </section>
+
       <StudyFinder />
 
       {/* WHY TÜRKIYE / WHY US SECTION */}
