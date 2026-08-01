@@ -1,0 +1,121 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Student/admin profiles, keyed by Firebase Auth uid.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+
+      // Self-registration always creates a plain 'student' account.
+      // Admin accounts are never created through the client SDK - they're
+      // set up manually in the Firebase Console, which bypasses these rules.
+      allow create: if isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'student'
+        && request.resource.data.status == 'active';
+
+      // Students can edit their own profile fields, but never escalate
+      // their own role/status or rewrite their identity fields. Admins can
+      // manage any profile.
+      allow update: if isAdmin() || (
+        isOwner(uid) &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.status == resource.data.status &&
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.email == resource.data.email
+      );
+
+      allow delete: if false;
+    }
+
+    // University applications, one per student per university.
+    match /applications/{appId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.studentUid == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && request.resource.data.studentUid == request.auth.uid
+        && request.resource.data.stage == 'documents_pending'
+        && request.resource.data.adminNotes == ''
+        && request.resource.data.offerLetterUrl == null
+        && request.resource.data.paymentSlipUrl == null;
+
+      // Students may only touch their documents/drive link/payment slip and
+      // move themselves through the self-service stages (submit, pay).
+      // Review stages (under_review, offer_sent, accepted, rejected) and
+      // admin notes/offer letters are admin-only.
+      allow update: if isAdmin() || (
+        isSignedIn() &&
+        resource.data.studentUid == request.auth.uid &&
+        request.resource.data.studentUid == resource.data.studentUid &&
+        request.resource.data.universityId == resource.data.universityId &&
+        request.resource.data.universityName == resource.data.universityName &&
+        request.resource.data.universityType == resource.data.universityType &&
+        request.resource.data.programName == resource.data.programName &&
+        request.resource.data.level == resource.data.level &&
+        request.resource.data.adminNotes == resource.data.adminNotes &&
+        request.resource.data.offerLetterUrl == resource.data.offerLetterUrl &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.stage in ['documents_pending', 'submitted', 'payment_pending']
+      );
+
+      allow delete: if false;
+    }
+
+    // Public "Become a Partner" lead form - unauthenticated by design, so
+    // only basic shape/size validation is possible here (no rate limiting).
+    match /partnerLeads/{leadId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'agencyName', 'phone', 'email', 'location', 'createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() < 200
+        && request.resource.data.agencyName is string && request.resource.data.agencyName.size() < 200
+        && request.resource.data.phone is string && request.resource.data.phone.size() < 60
+        && request.resource.data.email is string && request.resource.data.email.size() < 200
+        && request.resource.data.location is string && request.resource.data.location.size() < 200;
+
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // Firebase "Trigger Email" extension queue. Locked to the fixed admin
+    // address so this can't be used as an open mail relay.
+    match /mail/{mailId} {
+      allow create: if isSignedIn()
+        && request.resource.data.to == ['talhasays94@gmail.com']
+        && request.resource.data.message is map;
+
+      allow read, update, delete: if false;
+    }
+
+    // Per-IP daily chat rate limiter, written from a server API route with
+    // no Firebase Auth session, so this must stay open - but scoped tightly
+    // to its own shape.
+    match /chatLimits/{limitId} {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create, update: if request.resource.data.count is int
+        && request.resource.data.count >= 0
+        && request.resource.data.count <= 100000
+        && request.resource.data.date is string
+        && request.resource.data.updatedAt is string;
+    }
+
+    // Deny everything else by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
