@@ -49,7 +49,10 @@ export default function BlogPost({ post, related }) {
           </nav>
 
           <Reveal>
-            <h1 style={{ color: 'var(--secondary)', fontSize: '2.2rem', marginBottom: '1.5rem' }}>{post.title}</h1>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {post.category === 'guide' ? t('blog.categoryGuide') : t('blog.categoryTravel')}
+            </span>
+            <h1 style={{ color: 'var(--secondary)', fontSize: '2.2rem', margin: '0.5rem 0 1.5rem 0' }}>{post.title}</h1>
           </Reveal>
 
           <Reveal delay={80}>

@@ -23,6 +23,9 @@ export default function Blog() {
               <Reveal key={post.slug} delay={(i % 3) * 90}>
                 <Link href={`/blog/${post.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                   <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>
+                      {post.category === 'guide' ? t('blog.categoryGuide') : t('blog.categoryTravel')}
+                    </span>
                     <h3 className="card-title">{post.title}</h3>
                     <p className="card-text" style={{ flex: 1 }}>{post.excerpt}</p>
                     <span style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.9rem', marginTop: '1rem' }}>{t('blog.readMore')} →</span>

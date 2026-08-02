@@ -91,7 +91,7 @@ export default function Tourism() {
             <p>{t('tourism.storiesSubtitle')}</p>
           </div>
           <div className="grid-3">
-            {travelBlogPosts.map((post, i) => (
+            {travelBlogPosts.filter((post) => post.category === 'travel').map((post, i) => (
               <Reveal key={post.slug} delay={(i % 3) * 90}>
                 <Link href={`/blog/${post.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                   <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
