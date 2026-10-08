@@ -6,11 +6,11 @@ import { SITE_DOMAIN } from '@/lib/seo';
 const ORGANIZATION_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'EducationalOrganization',
-  name: 'GoTurkey 2k2x',
+  name: 'GoTürkiye2x',
   url: SITE_DOMAIN,
-  logo: `${SITE_DOMAIN}/icon-512.png`,
+  logo: `${SITE_DOMAIN}/logo.png`,
   description:
-    'GoTurkey 2k2x is an educational consultancy connecting international students with guaranteed acceptance at top Turkish universities, plus comprehensive post-landing services.',
+    'GoTürkiye2x is an educational consultancy connecting international students with guaranteed acceptance at top Turkish universities, plus comprehensive post-landing services.',
   email: 'talhasays94@gmail.com',
   telephone: '+905376994302',
   sameAs: [

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
@@ -55,11 +56,7 @@ export default function Header() {
       <header className="header">
         <div className="container">
           <Link href="/" className="logo">
-            <div className="logo-text">
-              <span className="logo-go">GoTurkey</span>
-              <span className="logo-turkey">2k2x</span>
-              <div className="logo-tagline">{t('header.tagline')}</div>
-            </div>
+            <Image src="/logo.png" alt="GoTürkiye2x" width={1000} height={481} priority className="logo-img" />
           </Link>
 
           <button className="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>

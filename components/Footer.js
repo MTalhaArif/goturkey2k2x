@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function Footer() {
@@ -10,10 +11,10 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-col">
             <div style={{ marginBottom: 18 }}>
-              <div style={{ fontSize: 22, fontWeight: 900, color: "white", fontFamily: "var(--font-heading)" }}>
-                <span style={{ color: "var(--primary)" }}>GoTurkey</span>2k2x
+              <div className="logo-badge" style={{ marginBottom: 10 }}>
+                <Image src="/logo.png" alt="GoTürkiye2x" width={1000} height={481} style={{ height: 80, width: "auto", display: "block" }} />
               </div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>{t('footer.tagline')}</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)" }}>{t('footer.tagline')}</div>
             </div>
             <p className="footer-text">
               {t('footer.blurb')}

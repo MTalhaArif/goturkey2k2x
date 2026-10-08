@@ -23,7 +23,7 @@ export default function Seo({ title, description, path, noindex = false }) {
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImage} />
-      <meta property="og:site_name" content="GoTurkey 2k2x" />
+      <meta property="og:site_name" content="GoTürkiye2x" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       {description && <meta name="twitter:description" content={description} />}

@@ -33,7 +33,7 @@ export default function About() {
             <Reveal>
               <div className="card text-center" style={{ borderTop: "4px solid var(--primary)" }}>
                 <div style={{ position: "relative", width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
-                  <Image src="/talha.jpg" alt="Muhammad Talha Arif, CEO of GoTurkey 2k2x" fill sizes="150px" style={{ objectFit: "cover" }} />
+                  <Image src="/talha.jpg" alt="Muhammad Talha Arif, CEO of GoTürkiye2x" fill sizes="150px" style={{ objectFit: "cover" }} />
                 </div>
                 <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>Muhammad Talha Arif</h3>
                 <h4 style={{ color: "var(--primary)", fontSize: "1rem", marginBottom: "1rem" }}>{t('about.ceoTitle')}</h4>
@@ -51,7 +51,7 @@ export default function About() {
             <Reveal delay={120}>
               <div className="card text-center" style={{ borderTop: "4px solid var(--accent)" }}>
                 <div style={{ position: "relative", width: "150px", height: "150px", borderRadius: "50%", background: "#e2e8f0", margin: "0 auto 1.5rem auto", overflow: "hidden" }}>
-                  <Image src="https://ui-avatars.com/api/?name=Seemab+Kanwal&background=FFD700&color=0F1A3C&size=150" alt="Seemab Kanwal, Creative Director at GoTurkey 2k2x" fill sizes="150px" style={{ objectFit: "cover" }} />
+                  <Image src="https://ui-avatars.com/api/?name=Seemab+Kanwal&background=FFD700&color=0F1A3C&size=150" alt="Seemab Kanwal, Creative Director at GoTürkiye2x" fill sizes="150px" style={{ objectFit: "cover" }} />
                 </div>
                 <h3 style={{ color: "var(--secondary)", marginBottom: "0.5rem" }}>Seemab Kanwal</h3>
                 <h4 style={{ color: "var(--primary)", fontSize: "1rem", marginBottom: "1rem" }}>{t('about.creativeDirectorTitle')}</h4>

@@ -28,12 +28,12 @@ export default function BlogPost({ post, related }) {
     headline: post.title,
     description: post.excerpt,
     articleBody: post.body.join(' '),
-    publisher: { '@type': 'Organization', name: 'GoTurkey 2k2x' },
+    publisher: { '@type': 'Organization', name: 'GoTürkiye2x' },
   };
 
   return (
     <>
-      <Seo title={`${post.title} | GoTurkey 2k2x`} description={post.excerpt} path={`/blog/${post.slug}`} />
+      <Seo title={`${post.title} | GoTürkiye2x`} description={post.excerpt} path={`/blog/${post.slug}`} />
       <Head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       </Head>

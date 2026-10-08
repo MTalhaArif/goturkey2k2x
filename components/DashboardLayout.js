@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -21,8 +22,8 @@ export default function DashboardLayout({ children }) {
     <div style={{ minHeight: '100vh', background: '#f1f5f9', display: 'flex', flexDirection: 'column' }}>
       <header style={{ background: 'var(--secondary)', color: 'white', padding: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '1rem' }}>
-          <Link href="/" style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>
-            <span style={{ color: 'var(--primary)' }}>GoTurkey</span>2k2x
+          <Link href="/" className="logo-badge" style={{ padding: '4px 10px' }}>
+            <Image src="/logo.png" alt="GoTürkiye2x" width={1000} height={481} style={{ height: 40, width: 'auto', display: 'block' }} />
           </Link>
           <span style={{ color: 'rgba(255,255,255,0.4)' }}>|</span>
           <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{isAdmin ? t('dashboardLayout.adminPortal') : t('dashboardLayout.studentPortal')}</span>

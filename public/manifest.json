@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "GoTurkey2k2x",
-  "short_name": "GoTurkey",
-  "description": "GoTurkey2k2x — plan, explore, and manage your Turkey journey.",
+  "name": "GoTürkiye2x",
+  "short_name": "GoTürkiye2x",
+  "description": "GoTürkiye2x — plan, explore, and manage your Turkey journey.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

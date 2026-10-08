@@ -1,4 +1,4 @@
-const CACHE_NAME = 'goturkey-static-v1';
+const CACHE_NAME = 'goturkey-static-v2';
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
